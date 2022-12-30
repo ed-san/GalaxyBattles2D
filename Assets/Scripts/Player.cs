@@ -9,6 +9,13 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float _speed = 8.0f;
+    [SerializeField]
+    private GameObject _laserPrefab;
+    [SerializeField]
+    private Vector3 offSetLaserSpawn = new Vector3(0, 0.8f, 0);
+    [SerializeField]
+    private float _fireRate = 0.15f;
+    private float _canFire = -1.0f;
 
 
     // Start is called before the first frame update
@@ -20,10 +27,19 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        calculateMovement();
+        CalculateMovement();
+        
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        {
+              FireLaser();
+        }
     }
-
-    void calculateMovement()
+    
+    /// <summary>
+    /// This method registers the players input from the WASD keys to move along the X-Axis and Y-Axis.
+    /// It also limits the players range along the Y-Axis so that they can't go off-screen.
+    /// </summary>
+    void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
@@ -52,6 +68,17 @@ public class Player : MonoBehaviour
             
             transform.position = new Vector3(xPosOffScreenLeft,  yPosOffScreenLeft, 0);
         }
+    }
+
+    /// <summary>
+    /// Adds the fire rate delay to the current time(in seconds) of the frame and spawns
+    /// the laser prefab object with a Y-Axis off-set from the player object location.
+    /// </summary>
+    
+    void FireLaser()
+    {
+        _canFire = Time.time + _fireRate;
+        Instantiate(_laserPrefab, transform.position + offSetLaserSpawn, Quaternion.identity);
     }
     
 }
