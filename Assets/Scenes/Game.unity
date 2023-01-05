@@ -418,7 +418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 8
   _laserPrefab: {fileID: 249049102865344551, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
-  offSetLaserSpawn: {x: 0, y: 0.866, z: 0}
+  _offSetLaserSpawn: {x: 0, y: 0.866, z: 0}
   _fireRate: 0.15
   _lives: 3
 --- !u!212 &1360997973
@@ -592,4 +592,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 983328527700868596, guid: d72642f3e7eb7804c8cedc4cfc85863f, type: 3}
   _enemyContainer: {fileID: 1618635406}
-  spawnRate: 5
+  _spawnRate: 5

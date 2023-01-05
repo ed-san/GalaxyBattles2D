@@ -13,10 +13,10 @@ public class Enemy : MonoBehaviour
         
         // if enemy object is at the bottom of screen
         // respawn at top with a random X-Axis position
-        if (transform.position.y <= -5.5f)
+        if (transform.position.y <= -10.5f)
         { 
             float randomX = Random.Range(-9.46f,9.46f);
-            transform.position = new Vector3(randomX, 7.5f, 0);
+            transform.position = new Vector3(randomX, 10.5f, 0);
         }
     }
 
