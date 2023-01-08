@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Laser : MonoBehaviour
@@ -10,10 +11,21 @@ public class Laser : MonoBehaviour
     {
         CalculateLaserMovement();
         
-        // if Y-Axis position is greater than 8.0, destroy laser object
-        if (transform.position.y >= 8.0f)
+        // if Y-Axis position is greater than 9.5, destroy laser object
+        if (transform.position.y >= 9.5f)
         {
-            Destroy(gameObject);
+            if (gameObject.CompareTag("Laser"))
+            {
+                Destroy(gameObject);
+            }
+
+            if (transform.parent.CompareTag("TripleShot"))
+            {
+                Destroy(transform.parent.gameObject);
+            } 
+   
+           
+            
         }
     }
 
