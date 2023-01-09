@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     private SpawnManager _spawnManager;
     [SerializeField]
-    private bool isTripleShotActive = false;
+    private bool _isTripleShotActive = false;
 
 
     // Start is called before the first frame update
@@ -90,7 +90,7 @@ public class Player : MonoBehaviour
     {
         _canFire = Time.time + _fireRate;
         
-        if (isTripleShotActive == true)
+        if (_isTripleShotActive == true)
         {
             Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
         } else
@@ -111,17 +111,14 @@ public class Player : MonoBehaviour
 
     public void TripleShotActive()
     {
-        isTripleShotActive = true;
+        _isTripleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine(5));
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)
     {
-        while (isTripleShotActive)
-        {
             yield return new WaitForSeconds(waitTime);
-            isTripleShotActive= false;
-        }
+            _isTripleShotActive= false;
     }
     
 }

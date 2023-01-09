@@ -14,18 +14,12 @@ public class Laser : MonoBehaviour
         // if Y-Axis position is greater than 9.5, destroy laser object
         if (transform.position.y >= 9.5f)
         {
-            if (gameObject.CompareTag("Laser"))
-            {
-                Destroy(gameObject);
-            }
-
-            if (transform.parent.CompareTag("TripleShot"))
+            if (transform.parent != null)
             {
                 Destroy(transform.parent.gameObject);
-            } 
-   
-           
-            
+            }
+
+            Destroy(this.gameObject);
         }
     }
 
