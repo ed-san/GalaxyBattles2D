@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _tripleLaserPrefab;
     [SerializeField]
+    private GameObject _shieldPrefab;
+    [SerializeField]
     private Vector3 _offSetLaserSpawn = new Vector3(0, 0.866f, 0);
     [SerializeField]
     private float _fireRate = 0.15f;
@@ -23,6 +25,8 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField]
     private bool _isTripleShotActive = false;
+    [SerializeField]
+    private bool _isShieldActive = false;
 
 
     // Start is called before the first frame update
@@ -103,12 +107,25 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        _lives -= 1;
-        if (_lives < 1)
+        //if shields is active
+        //do nothing
+        //deactivate shields sprite
+        //use return keyword to break out
+        if (_isShieldActive == true)
         {
-            _spawnManager.OnPlayerDeath();
-            Destroy(this.gameObject);
+            Destroy(GameObject.FindGameObjectWithTag("Shield"));
+            _isShieldActive = false;
+            return;
+        }else
+        {
+            _lives -= 1;
+            if (_lives < 1)
+            {
+                _spawnManager.OnPlayerDeath();
+                Destroy(this.gameObject);
+            }
         }
+       
     }
 
     public void TripleShotActive()
@@ -121,6 +138,13 @@ public class Player : MonoBehaviour
     {
         _speed *= _speedMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine(5));
+    }
+
+    public void ShieldActive()
+    {
+        _isShieldActive = true;
+        GameObject activatedShield = Instantiate(_shieldPrefab, transform.position, Quaternion.identity);
+        activatedShield.transform.parent = this.gameObject.transform;
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)

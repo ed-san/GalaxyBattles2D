@@ -36,7 +36,7 @@ public class Powerup : MonoBehaviour
                         player.SpeedBoostActive();
                         break;
                     case 2:
-                        Debug.Log("Player has picked up Shield!");
+                        player.ShieldActive();
                         break;
                     default:
                         Debug.Log("Undetected Powerup picked up!");
