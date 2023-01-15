@@ -30,9 +30,8 @@ public class Player : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-         
-    transform.position = new Vector3(0, 0, 0);
+    { 
+        transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
         if (_spawnManager == null)
@@ -140,11 +139,6 @@ public class Player : MonoBehaviour
     {
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
-    }
-
-    public bool ShieldStatus()
-    {
-        return _isShieldActive;
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)

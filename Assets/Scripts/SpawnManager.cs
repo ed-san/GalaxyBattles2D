@@ -13,20 +13,14 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float _spawnRate = 5.0f;
     private bool _stopSpawning = false;
-
-    //get player game object
-    //get child object "shield"
    
-
-
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(SpawnEnemyRoutine(_spawnRate));
         StartCoroutine(SpawnPowerupRoutine());
     }
-
-    
+ 
     IEnumerator SpawnEnemyRoutine(float waitTime)
     {
         while (_stopSpawning == false)
