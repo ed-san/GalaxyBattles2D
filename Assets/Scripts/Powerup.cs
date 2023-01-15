@@ -52,4 +52,9 @@ public class Powerup : MonoBehaviour
     {
         transform.Translate(Time.deltaTime * _powerUpSpeed * Vector3.down);
     }
+
+    public int GetPowerupID()
+    {
+        return _powerupID;
+    }
 }

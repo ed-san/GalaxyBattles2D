@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _tripleLaserPrefab;
     [SerializeField]
-    private GameObject _shieldPrefab;
+    private GameObject _shieldVisualizer;
     [SerializeField]
     private Vector3 _offSetLaserSpawn = new Vector3(0, 0.866f, 0);
     [SerializeField]
@@ -23,16 +23,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
-    [SerializeField]
     private bool _isTripleShotActive = false;
-    [SerializeField]
     private bool _isShieldActive = false;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(0, 0, 0);
+         
+    transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
         if (_spawnManager == null)
@@ -107,14 +107,10 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        //if shields is active
-        //do nothing
-        //deactivate shields sprite
-        //use return keyword to break out
         if (_isShieldActive == true)
         {
-            Destroy(GameObject.FindGameObjectWithTag("Shield"));
             _isShieldActive = false;
+            _shieldVisualizer.SetActive(false);         
             return;
         }else
         {
@@ -143,8 +139,12 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _isShieldActive = true;
-        GameObject activatedShield = Instantiate(_shieldPrefab, transform.position, Quaternion.identity);
-        activatedShield.transform.parent = this.gameObject.transform;
+        _shieldVisualizer.SetActive(true);
+    }
+
+    public bool ShieldStatus()
+    {
+        return _isShieldActive;
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)
