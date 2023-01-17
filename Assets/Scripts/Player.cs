@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float _speed = 6.0f;
+    private float _originalSpeed = 6.0f;
     [SerializeField]
     private float _speedMultiplier = 2.0f; 
     [SerializeField]
@@ -25,6 +26,10 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
+    [SerializeField]
+    private bool _isSpeedBoostActive = false;
+    private Coroutine m_MyRunningCoroutine = null;
+    private bool _coroutineActive = false;
 
 
 
@@ -131,8 +136,49 @@ public class Player : MonoBehaviour
 
     public void SpeedBoostActive()
     {
-        _speed *= _speedMultiplier;
-        StartCoroutine(SpeedBoostPowerDownRoutine(5));
+        if (_isSpeedBoostActive == true)
+        {
+            //This code block limits speed to 15 regardless of how many speed boosts.
+            if (_coroutineActive == true && _speed >= 15.0f)
+            {
+                return;        
+            } else if (_coroutineActive == true)
+            {
+                _speedMultiplier = 1.25f;
+                _speed *= _speedMultiplier;
+                StopMyCoroutine();
+            } else
+            {
+                StopMyCoroutine();
+            }
+                StartMyCoroutine();
+        }
+        else
+        {
+            _speed *= _speedMultiplier;
+            
+        }
+
+        _isSpeedBoostActive = true;
+        StartMyCoroutine();
+    }
+   
+        void StartMyCoroutine()
+    {
+        
+        _coroutineActive = true;
+        m_MyRunningCoroutine = StartCoroutine(SpeedBoostPowerDownRoutine(5));
+    }
+
+    void StopMyCoroutine()
+    {
+        _coroutineActive = false;
+        if (m_MyRunningCoroutine != null)
+        {
+            StopCoroutine(m_MyRunningCoroutine);
+            _isSpeedBoostActive = false;
+            m_MyRunningCoroutine = null;
+        }
     }
 
     public void ShieldActive()
@@ -149,8 +195,24 @@ public class Player : MonoBehaviour
 
     IEnumerator SpeedBoostPowerDownRoutine(float waitTime)
     {
+
         yield return new WaitForSeconds(waitTime);
-        _speed /= _speedMultiplier;
+
+        switch(_speed)
+        {
+            case 15:
+                _speed /= 2.5f;
+                break;
+            case 12:
+                _speed /= _speedMultiplier;
+                break;
+            default:
+                _speed = _originalSpeed;
+                break;
+        }
+
+        _isSpeedBoostActive = false;
+        _speedMultiplier = 2.0f;
     }
     
 }
