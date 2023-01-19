@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
     private bool _isSpeedBoostActive = false;
     private Coroutine m_MyRunningCoroutine = null;
     private bool _coroutineActive = false;
+    [SerializeField]
+    private int _score = 0;
 
 
 
@@ -138,7 +140,7 @@ public class Player : MonoBehaviour
     {
         if (_isSpeedBoostActive == true)
         {
-            //This code block limits speed to 15 regardless of how many speed boosts.
+            
             if (_coroutineActive == true && _speed >= 15.0f)
             {
                 return;        
@@ -214,5 +216,16 @@ public class Player : MonoBehaviour
         _isSpeedBoostActive = false;
         _speedMultiplier = 2.0f;
     }
+    public void IncreaseScore()
+    {
+        _score += 10;
+    }
+
+    public int GetScore()
+    {
+        return this._score;
+    }
+    //Create method to add 10 to the score
+    //Communicate with UI to update the score
     
 }

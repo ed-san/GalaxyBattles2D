@@ -37,6 +37,13 @@ public class Enemy : MonoBehaviour
         
         if (other.CompareTag("Laser"))
         {
+            Player player = GameObject.Find("Player").GetComponent<Player>();
+            UIManager uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+            if (player != null)
+            {
+                player.IncreaseScore();
+                uiManager.UpdateScore(player.GetScore());
+            }
             Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
