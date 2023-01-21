@@ -5,6 +5,12 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float _enemySpeed = 4.0f;
+    private Player _player;
+
+    private void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -25,24 +31,18 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            //Damage player on collision
-            Player player = other.transform.GetComponent<Player>();
-            //Add a NULL check for component
-            if (player != null)
+            if (_player != null)
             {
-                player.Damage();
+                _player.Damage();
             }
             Destroy(this.gameObject);
         }
         
         if (other.CompareTag("Laser"))
-        {
-            Player player = GameObject.Find("Player").GetComponent<Player>();
-            UIManager uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-            if (player != null)
+        {          
+            if (_player != null)
             {
-                player.IncreaseScore();
-                uiManager.UpdateScore(player.GetScore());
+                _player.IncreaseScore(10);
             }
             Destroy(other.gameObject);
             Destroy(this.gameObject);

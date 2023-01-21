@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     private bool _coroutineActive = false;
     [SerializeField]
     private int _score = 0;
+    private UIManager _uiManager;
 
 
 
@@ -40,10 +41,16 @@ public class Player : MonoBehaviour
     { 
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn_Manager object doesn't have Spawn Manager script!");
+        }
+        
+        if(_uiManager == null)
+        {
+            Debug.LogError("UIManager is NULL!");
         }
     }
 
@@ -216,16 +223,10 @@ public class Player : MonoBehaviour
         _isSpeedBoostActive = false;
         _speedMultiplier = 2.0f;
     }
-    public void IncreaseScore()
+    public void IncreaseScore(int playerScore)
     {
-        _score += 10;
+        _score += playerScore;
+        _uiManager.UpdateScore(_score);
     }
-
-    public int GetScore()
-    {
-        return this._score;
-    }
-    //Create method to add 10 to the score
-    //Communicate with UI to update the score
     
 }

@@ -7,7 +7,6 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
 
-    //Create a handle to text component
     [SerializeField]
     private TMP_Text _scoreText;
 
