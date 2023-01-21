@@ -34,9 +34,6 @@ public class Player : MonoBehaviour
     private int _score = 0;
     private UIManager _uiManager;
 
-
-
-    // Start is called before the first frame update
     void Start()
     { 
         transform.position = new Vector3(0, 0, 0);
@@ -54,7 +51,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         CalculateMovement();

@@ -9,7 +9,6 @@ public class Powerup : MonoBehaviour
     [SerializeField] //ID "0" = TripleShot | "1" = Speed Boost | "2" = Shield
     private int _powerupID;
 
-    // Update is called once per frame
     void Update()
     {
         PowerupMovement();

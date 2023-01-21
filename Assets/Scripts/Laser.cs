@@ -6,7 +6,6 @@ public class Laser : MonoBehaviour
     [SerializeField]
     private float _projectileSpeed = 10.0f;
 
-    // Update is called once per frame
     void Update()
     {
         CalculateLaserMovement();

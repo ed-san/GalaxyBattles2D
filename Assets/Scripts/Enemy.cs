@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.Translate(Time.deltaTime * _enemySpeed * Vector3.down);
