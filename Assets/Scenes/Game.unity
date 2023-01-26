@@ -413,12 +413,12 @@ GameObject:
   - component: {fileID: 588925234}
   - component: {fileID: 588925233}
   m_Layer: 5
-  m_Name: Game_Over_Text
+  m_Name: Game_Over_text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &588925232
 RectTransform:
   m_ObjectHideFlags: 0
