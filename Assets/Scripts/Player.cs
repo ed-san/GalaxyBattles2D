@@ -226,5 +226,14 @@ public class Player : MonoBehaviour
         _score += playerScore;
         _uiManager.UpdateScore(_score);
     }
+<<<<<<< Updated upstream
     
+=======
+
+    public int GetScore()
+    {
+        return this._score;
+    }
+
+>>>>>>> Stashed changes
 }
