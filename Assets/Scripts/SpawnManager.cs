@@ -13,8 +13,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float _spawnRate = 5.0f;
     private bool _stopSpawning = false;
-   
-    void Start()
+
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine(_spawnRate));
         StartCoroutine(SpawnPowerupRoutine());
@@ -22,6 +22,8 @@ public class SpawnManager : MonoBehaviour
  
     IEnumerator SpawnEnemyRoutine(float waitTime)
     {
+        yield return new WaitForSeconds(1.5f);
+        
         while (_stopSpawning == false)
         {
             Vector3 spawnPosition = new Vector3(Random.Range(-10.14f,10.14f), 12.0f,0);
@@ -34,6 +36,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerupRoutine()
     {
+        yield return new WaitForSeconds(1.5f);
+        
         while (_stopSpawning == false) 
         { 
             Vector3 spawnPowPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);

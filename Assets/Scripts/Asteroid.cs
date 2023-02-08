@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
@@ -9,9 +6,16 @@ public class Asteroid : MonoBehaviour
     [SerializeField]
     private float _astroRotationSpeed = 20.0f;
 
-    [SerializeField] private GameObject _asteroidExplosionPrefab;
+    [SerializeField] 
+    private GameObject _asteroidExplosionPrefab;
 
-    // Update is called once per frame
+    private SpawnManager _spawnManager;
+
+    private void Start()
+    {
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+    }
+    
     void Update()
     {
         RotateAsteroid();
@@ -19,21 +23,17 @@ public class Asteroid : MonoBehaviour
 
     void RotateAsteroid()
     {
-        //transform.Translate(Time.deltaTime * _astroRotationSpeed * Vector2.down, Space.World);
-        //transform.Rotate(0,0, 180 * Time.deltaTime);
-        transform.Rotate(Vector3.forward * _astroRotationSpeed * Time.deltaTime);
+        transform.Rotate(Time.deltaTime * _astroRotationSpeed * Vector3.forward);
     }
-    
-    //Check for Laser collision (Trigger)
-    //Instantiate the explosion object at the position of the asteroid (us).
-
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (col.CompareTag("Laser"))
-        {   
-            Destroy(this.gameObject);    
+        if (other.CompareTag("Laser"))
+        {
             Vector3 spawnPosition = this.transform.position;
             Instantiate(_asteroidExplosionPrefab, spawnPosition, Quaternion.identity);
+            Destroy(other.gameObject);
+            _spawnManager.StartSpawning();
+            Destroy(this.gameObject, 0.2f); 
         }
     }
 }

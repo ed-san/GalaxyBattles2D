@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shieldVisualizer;
     [SerializeField]
+    private GameObject _leftEngineVisualizer, _rightEngineVisualizer;
+    [SerializeField]
     private Vector3 _offSetLaserSpawn = new Vector3(0, 0.866f, 0);
     [SerializeField]
     private float _fireRate = 0.15f;
@@ -33,7 +35,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score = 0;
     private UIManager _uiManager;
-
+    
     void Start()
     { 
         transform.position = new Vector3(0, 0, 0);
@@ -124,6 +126,17 @@ public class Player : MonoBehaviour
         }else
         {
             _lives -= 1;
+            
+            if (_lives.Equals(2))
+            {
+                _rightEngineVisualizer.SetActive(true);
+            } 
+            else if (_lives.Equals(1))
+            {
+                _leftEngineVisualizer.SetActive(true);
+            }
+            
+            
             if (_lives < 1)
             {
                 _spawnManager.OnPlayerDeath();
