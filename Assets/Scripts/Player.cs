@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -35,13 +36,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _score = 0;
     private UIManager _uiManager;
+
+    //variable to store audio clip
+    [SerializeField]
+    private AudioClip _laserShotAudioClip;
+    private AudioSource _audioSource;
     
     void Start()
     { 
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-
+        _audioSource = GetComponent<AudioSource>();
+        
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn_Manager object doesn't have Spawn Manager script!");
@@ -50,6 +57,15 @@ public class Player : MonoBehaviour
         if(_uiManager == null)
         {
             Debug.LogError("UIManager is NULL!");
+        }
+
+        if (_audioSource == null)
+        {
+            Debug.LogError("Player Audio Source component is NULL!");
+        }
+        else
+        {
+            _audioSource.clip = _laserShotAudioClip;
         }
     }
 
@@ -114,6 +130,8 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity);
         }
+        
+        _audioSource.Play();
     }
 
     public void Damage()
