@@ -26,5 +26,5 @@ public class Laser : MonoBehaviour
     {
         transform.Translate(Time.deltaTime * _projectileSpeed * Vector3.up );
     }
-    
+
 }

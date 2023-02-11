@@ -7,20 +7,34 @@ public class Enemy : MonoBehaviour
     private float _enemySpeed = 4.0f;
     private Player _player;
     private Animator _anim;
-
+    [SerializeField]
+    private AudioClip _enemyExplodingSoundClip;
+    private AudioSource _audioSource;
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _anim = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+        
         if (_player == null)
         {
             Debug.LogError("The Player is NULL.");
         }
-
-        _anim = GetComponent<Animator>();
+        
         if (_anim == null)
         {
             Debug.LogError("The Animator is NULL.");
         }
+
+        if (_audioSource == null)
+        {
+            Debug.LogError("Enemy prefab doesn't have audio source component!");
+        }
+        else
+        {
+            _audioSource.clip = _enemyExplodingSoundClip;
+        }
+        
     }
 
     void Update()
@@ -48,6 +62,7 @@ public class Enemy : MonoBehaviour
             
             _anim.SetTrigger("OnEnemyDeath");
             _enemySpeed = 0;
+            _audioSource.Play(); 
             Destroy(this.gameObject, 2.2f);
         }
         
@@ -61,6 +76,7 @@ public class Enemy : MonoBehaviour
             
             _anim.SetTrigger("OnEnemyDeath");
             _enemySpeed = 0;
+            _audioSource.Play();
             Destroy(this.gameObject, 2.2f);
         }
     }

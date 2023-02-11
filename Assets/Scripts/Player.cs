@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _leftEngineVisualizer, _rightEngineVisualizer;
     [SerializeField]
+    private GameObject _playerDeath;
+    [SerializeField]
     private Vector3 _offSetLaserSpawn = new Vector3(0, 0.866f, 0);
     [SerializeField]
     private float _fireRate = 0.15f;
@@ -48,7 +50,7 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
-        
+
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn_Manager object doesn't have Spawn Manager script!");
@@ -67,6 +69,7 @@ public class Player : MonoBehaviour
         {
             _audioSource.clip = _laserShotAudioClip;
         }
+        
     }
 
     void Update()
@@ -157,8 +160,7 @@ public class Player : MonoBehaviour
             
             if (_lives < 1)
             {
-                _spawnManager.OnPlayerDeath();
-                Destroy(this.gameObject);
+                DestroyedPlayerSequence();
             }
 
             _uiManager.UpdateLives(_lives);
@@ -256,6 +258,14 @@ public class Player : MonoBehaviour
     {
         _score += playerScore;
         _uiManager.UpdateScore(_score);
+    }
+
+    void DestroyedPlayerSequence()
+    {
+        _spawnManager.OnPlayerDeath();
+        _speed = 0.0f;
+        Instantiate(_playerDeath, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
     }
 
 }

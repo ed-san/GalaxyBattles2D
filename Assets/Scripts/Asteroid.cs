@@ -5,15 +5,19 @@ public class Asteroid : MonoBehaviour
 {
     [SerializeField]
     private float _astroRotationSpeed = 20.0f;
-
     [SerializeField] 
     private GameObject _asteroidExplosionPrefab;
-
     private SpawnManager _spawnManager;
 
     private void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
+        if(_spawnManager == null)
+        {
+            Debug.LogError("Spawn_Manager is NULL!");
+        }
+
     }
     
     void Update()
@@ -33,7 +37,8 @@ public class Asteroid : MonoBehaviour
             Instantiate(_asteroidExplosionPrefab, spawnPosition, Quaternion.identity);
             Destroy(other.gameObject);
             _spawnManager.StartSpawning();
-            Destroy(this.gameObject, 0.2f); 
+            _astroRotationSpeed = 0.0f;
+            Destroy(this.gameObject, 0.2f);
         }
     }
 }
