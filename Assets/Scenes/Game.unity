@@ -1162,7 +1162,7 @@ MonoBehaviour:
   _shieldVisualizer: {fileID: 2069453735}
   _leftEngineVisualizer: {fileID: 45000746}
   _rightEngineVisualizer: {fileID: 1755961554}
-  _thruster: {fileID: 1787940247}
+  _playerDeath: {fileID: 1160289120232976824, guid: a63f5745dec26414e8cbc494ac89e03f, type: 3}
   _offSetLaserSpawn: {x: 0, y: 0.866, z: 0}
   _fireRate: 0.15
   _lives: 3
@@ -2112,7 +2112,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5b17a0088dcdf924fa92da5af1e1be07, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 1
   Mute: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,9 @@ public class Powerup : MonoBehaviour
     private float _powerUpSpeed = 3.0f;
     [SerializeField] //ID "0" = TripleShot | "1" = Speed Boost | "2" = Shield
     private int _powerupID;
+    [SerializeField]
+    private AudioClip _powerUpClip;
+    
 
     void Update()
     {
@@ -23,6 +27,7 @@ public class Powerup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Player player = other.transform.GetComponent<Player>();
+            AudioSource.PlayClipAtPoint(_powerUpClip, transform.position, 1.0f);
 
             if (player != null)
             {
@@ -35,7 +40,7 @@ public class Powerup : MonoBehaviour
                         player.SpeedBoostActive();
                         break;
                     case 2:
-                        player.ShieldActive();
+                        player.ShieldActive(); ;
                         break;
                     default:
                         Debug.Log("Undetected Powerup picked up!");
