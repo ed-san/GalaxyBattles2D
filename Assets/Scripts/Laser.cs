@@ -43,7 +43,7 @@ public class Laser : MonoBehaviour
     {
         transform.Translate(Time.deltaTime * _projectileSpeed * Vector3.down );
         
-        // if Y-Axis position is greater than -4.5, destroy laser object
+        // if Y-Axis position is greater than -9.5, destroy laser object
         if (transform.position.y < -9.5f)
         {
             if (transform.parent != null)
