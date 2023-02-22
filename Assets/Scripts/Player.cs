@@ -9,8 +9,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 6.0f;
     private float _originalSpeed = 6.0f;
+    [SerializeField] private float _thrusterSpeed;
     [SerializeField]
-    private float _speedMultiplier = 2.0f; 
+    private float _speedMultiplier = 3.0f;
+    [SerializeField] 
+    private float _thrusterMultiplier = 0.0f; 
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -19,6 +22,8 @@ public class Player : MonoBehaviour
     private GameObject _shieldVisualizer;
     [SerializeField]
     private GameObject _leftEngineVisualizer, _rightEngineVisualizer;
+    [SerializeField] 
+    private GameObject _thrusterBoostPrefab;
     [SerializeField]
     private GameObject _playerDeath;
     [SerializeField]
@@ -75,11 +80,13 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        ThrusterEngaged();
         
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
               FireLaser();
         }
+        
     }
     
     /// <summary>
@@ -91,7 +98,7 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-        transform.Translate(Time.deltaTime * _speed * direction);
+        transform.Translate(Time.deltaTime * _speed * _thrusterSpeed * direction);
         
        // The code below restricts Y-Axis movement between the ranges of -3.8f and 3.0f creating a vertical boundary for player.
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 3.0f),0);
@@ -266,6 +273,21 @@ public class Player : MonoBehaviour
         _speed = 0.0f;
         Instantiate(_playerDeath, transform.position, Quaternion.identity);
         Destroy(this.gameObject);
+    }
+
+    void ThrusterEngaged()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _thrusterMultiplier = .75f;
+            _thrusterSpeed = _speedMultiplier + _thrusterMultiplier;
+            _thrusterBoostPrefab.SetActive(true);
+        }
+        else
+        {
+            _thrusterSpeed = 1.0f;
+            _thrusterBoostPrefab.SetActive(false);
+        }
     }
 
 }
