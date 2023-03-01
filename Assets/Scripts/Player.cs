@@ -9,17 +9,20 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 6.0f;
     private float _originalSpeed = 6.0f;
-    [SerializeField] private float _thrusterSpeed;
-    [SerializeField]
-    private float _speedMultiplier = 3.0f;
+    [SerializeField] 
+    private float _thrusterSpeed;
     [SerializeField] 
     private float _thrusterMultiplier = 0.0f; 
+    [SerializeField]
+    private float _speedMultiplier = 3.0f;
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleLaserPrefab;
     [SerializeField]
     private GameObject _shieldVisualizer;
+    [SerializeField] 
+    private GameObject _shieldDamagedVisualizer;
     [SerializeField]
     private GameObject _leftEngineVisualizer, _rightEngineVisualizer;
     [SerializeField] 
@@ -36,6 +39,7 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
+    private bool _isDamagedShieldActive = false;
     [SerializeField]
     private bool _isSpeedBoostActive = false;
     private Coroutine m_MyRunningCoroutine = null;
@@ -48,7 +52,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioClip _laserShotAudioClip;
     private AudioSource _audioSource;
-    
+
     void Start()
     { 
         transform.position = new Vector3(0, 0, 0);
@@ -149,9 +153,16 @@ public class Player : MonoBehaviour
         if (_isShieldActive == true)
         {
             _isShieldActive = false;
-            _shieldVisualizer.SetActive(false);         
+            _shieldVisualizer.SetActive(false);
+            DamagedShieldActive();
             return;
-        }else
+        } else if (_isShieldActive == false && _isDamagedShieldActive == true)
+        {
+            _isDamagedShieldActive = false;
+            _shieldDamagedVisualizer.SetActive(false);
+            return;
+        }
+        else
         {
             _lives -= 1;
             
@@ -232,6 +243,12 @@ public class Player : MonoBehaviour
     {
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
+    }
+
+    public void DamagedShieldActive()
+    {
+        _isDamagedShieldActive = true;
+        _shieldDamagedVisualizer.SetActive(true);
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)
