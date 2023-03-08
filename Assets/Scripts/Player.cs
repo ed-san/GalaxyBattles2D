@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -50,15 +51,18 @@ public class Player : MonoBehaviour
 
     //variable to store audio clip
     [SerializeField]
-    private AudioClip _laserShotAudioClip;
-    private AudioSource _audioSource;
+    private AudioSource[] _audioSource;
+    [SerializeField]
+    private EnergyBarUI _energyBar;
+    [SerializeField] 
+    private bool _LaserCooldown = false;
 
     void Start()
     { 
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        _audioSource = GetComponent<AudioSource>();
+        _audioSource = GetComponents<AudioSource>();
 
         if (_spawnManager == null)
         {
@@ -74,11 +78,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Player Audio Source component is NULL!");
         }
-        else
-        {
-            _audioSource.clip = _laserShotAudioClip;
-        }
-        
+
     }
 
     void Update()
@@ -90,7 +90,34 @@ public class Player : MonoBehaviour
         {
               FireLaser();
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_isTripleShotActive == true)
+            {
+                LaserEnergyCost(3);
+                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
+            }
+            else
+            {
+                LaserEnergyCost(1);
+                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
+            }
+            
+        }
+
+    }
+
+    private void LaserEnergyCost(int energyUsed)
+    {
+        GameManager.gameManager._playerEnergy.EnergyUseAmount(energyUsed);
+        _energyBar.SetEnergy(GameManager.gameManager._playerEnergy.Energy);
+    }
+    
+    private void LaserCostRegen(int regenAmt)
+    {
+        GameManager.gameManager._playerEnergy.EnergyRegenAmount(regenAmt);
+        _energyBar.SetEnergy(GameManager.gameManager._playerEnergy.Energy);
     }
     
     /// <summary>
@@ -137,15 +164,31 @@ public class Player : MonoBehaviour
     {
         _canFire = Time.time + _fireRate;
         
-        if (_isTripleShotActive == true)
+        if (_isTripleShotActive == true && _LaserCooldown == false)
         {
-            Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
-        } else
+            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            {
+                Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
+                _audioSource[0].Play();
+            }
+            else
+            {
+                LaserCoolDownActive();
+            }
+        } else if (_LaserCooldown == false)
         {
-            Instantiate(_laserPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity);
+            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            {
+                Instantiate(_laserPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity); 
+                
+                _audioSource[0].Play();
+            }
+            else
+            {
+                LaserCoolDownActive();
+            }
         }
-        
-        _audioSource.Play();
+
     }
 
     public void Damage()
@@ -184,6 +227,12 @@ public class Player : MonoBehaviour
             _uiManager.UpdateLives(_lives);
         }
        
+    }
+    
+    public void LaserCoolDownActive()
+    {
+        _LaserCooldown = true;
+        StartCoroutine(LaserEnergyRegensRoutine(3.0f));
     }
 
     public void TripleShotActive()
@@ -249,6 +298,15 @@ public class Player : MonoBehaviour
     {
         _isDamagedShieldActive = true;
         _shieldDamagedVisualizer.SetActive(true);
+    }
+
+    IEnumerator LaserEnergyRegensRoutine(float waitTime)
+    {
+        _audioSource[1].Play();
+        yield return new WaitForSeconds(waitTime);
+        LaserCostRegen(15);
+        _LaserCooldown = false;
+        _audioSource[1].Stop();
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)

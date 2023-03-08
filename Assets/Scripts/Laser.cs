@@ -9,6 +9,7 @@ public class Laser : MonoBehaviour
 
     private bool _isEnemyLaser = false;
 
+
     void Update()
     {
         
@@ -42,7 +43,7 @@ public class Laser : MonoBehaviour
     void MoveDown()
     {
         transform.Translate(Time.deltaTime * _projectileSpeed * Vector3.down );
-        
+
         // if Y-Axis position is greater than -9.5, destroy laser object
         if (transform.position.y < -9.5f)
         {
