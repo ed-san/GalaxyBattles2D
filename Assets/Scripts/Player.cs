@@ -112,6 +112,18 @@ public class Player : MonoBehaviour
         {
             LaserCostRegen(15);
         }
+        
+        if (_lives.Equals(3))
+        {
+            _rightEngineVisualizer.SetActive(false);
+            _leftEngineVisualizer.SetActive(false);
+        } 
+        else if (_lives.Equals(2))
+        {
+            _rightEngineVisualizer.SetActive(true);
+            _leftEngineVisualizer.SetActive(false);
+        }
+        
     }
 
     private void LaserEnergyCost(int energyUsed)
@@ -230,6 +242,20 @@ public class Player : MonoBehaviour
                 DestroyedPlayerSequence();
             }
 
+            _uiManager.UpdateLives(_lives);
+        }
+       
+    }
+
+    public void HealActive()
+    {
+        if (_lives.Equals(3))
+        {
+            return;
+        }
+        else
+        {
+            _lives += 1;
             _uiManager.UpdateLives(_lives);
         }
        

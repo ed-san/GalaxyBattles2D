@@ -2545,6 +2545,7 @@ MonoBehaviour:
   - {fileID: 360749830541995822, guid: c1e502a73e0cfa14aa83f9cbbd231c81, type: 3}
   - {fileID: 101841309452186699, guid: ca07932b3f7ef5f498fb1a6c0eaebdbb, type: 3}
   - {fileID: 5486634655708575127, guid: 0a69f7b8070036f42a2a352118a65089, type: 3}
+  - {fileID: 116386065367581714, guid: fef6467502f81a442a6d0d74b092b1f4, type: 3}
   _spawnRate: 5
 --- !u!1 &2069453735
 GameObject:

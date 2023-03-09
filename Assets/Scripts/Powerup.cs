@@ -7,7 +7,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private float _powerUpSpeed = 3.0f;
-    [SerializeField] //ID "0" = TripleShot | "1" = Speed Boost | "2" = Shield
+    [SerializeField] //ID "0" = TripleShot | "1" = Speed Boost | "2" = Shield | "3" = Ammo | "4" = Heal
     private int _powerupID;
     [SerializeField]
     private AudioClip _powerUpClip;
@@ -45,6 +45,9 @@ public class Powerup : MonoBehaviour
                         break;
                     case 3:
                         player.AmmoReloadActive();
+                        break;
+                    case 4:
+                        player.HealActive();
                         break;
                     default:
                         Debug.Log("Undetected Powerup picked up!");
