@@ -38,11 +38,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
     private SpawnManager _spawnManager;
+    // Powerup variables
     private bool _isTripleShotActive = false;
     private bool _isShieldActive = false;
     private bool _isDamagedShieldActive = false;
     [SerializeField]
     private bool _isSpeedBoostActive = false;
+    private bool _isAmmoReloadActive = false;
     private Coroutine m_MyRunningCoroutine = null;
     private bool _coroutineActive = false;
     [SerializeField]
@@ -105,7 +107,11 @@ public class Player : MonoBehaviour
             }
             
         }
-
+        
+        if (_isAmmoReloadActive == true)
+        {
+            LaserCostRegen(15);
+        }
     }
 
     private void LaserEnergyCost(int energyUsed)
@@ -240,6 +246,12 @@ public class Player : MonoBehaviour
         _isTripleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine(5));
     }
+    
+    public void AmmoReloadActive()
+    {
+        _isAmmoReloadActive = true;
+        StartCoroutine(AmmoReloadPowerDownRoutine(.5f));
+    }
 
     public void SpeedBoostActive()
     {
@@ -313,6 +325,12 @@ public class Player : MonoBehaviour
     {
             yield return new WaitForSeconds(waitTime);
             _isTripleShotActive= false;
+    }
+    
+    IEnumerator AmmoReloadPowerDownRoutine(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        _isAmmoReloadActive= false;
     }
 
     IEnumerator SpeedBoostPowerDownRoutine(float waitTime)
