@@ -10,6 +10,7 @@ TagManager:
   - Shield
   - Speed
   - Powerups
+  - SpecialShot
   layers:
   - Default
   - TransparentFX

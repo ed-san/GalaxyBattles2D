@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleLaserPrefab;
+    [SerializeField] 
+    private GameObject _specialShotPrefab;
+    [SerializeField] 
+    private GameObject _tripleSpecialShotPrefab;
     [SerializeField]
     private GameObject _shieldVisualizer;
     [SerializeField] 
@@ -40,6 +44,7 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     // Powerup variables
     private bool _isTripleShotActive = false;
+    private bool _isSpecialShotActive = false;
     private bool _isShieldActive = false;
     private bool _isDamagedShieldActive = false;
     [SerializeField]
@@ -95,9 +100,19 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (_isTripleShotActive == true)
+            if (_isTripleShotActive == true && _isSpecialShotActive == true)
+            {
+                LaserEnergyCost(8);
+                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
+            }
+            else if (_isTripleShotActive == true)
             {
                 LaserEnergyCost(3);
+                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
+            } 
+            else if (_isSpecialShotActive == true)
+            {
+                LaserEnergyCost(5);
                 //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
             }
             else
@@ -181,8 +196,19 @@ public class Player : MonoBehaviour
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
-        
-        if (_isTripleShotActive == true && _LaserCooldown == false)
+        if (_isTripleShotActive == true && _isSpecialShotActive == true && _LaserCooldown == false)
+        {
+            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            {
+                Instantiate(_tripleSpecialShotPrefab, transform.position, Quaternion.identity);
+                _audioSource[0].Play();
+            }
+            else
+            {
+                LaserCoolDownActive();
+            }
+        }
+        else if (_isTripleShotActive == true && _LaserCooldown == false)
         {
             if (GameManager.gameManager._playerEnergy.Energy > 0)
             {
@@ -193,7 +219,19 @@ public class Player : MonoBehaviour
             {
                 LaserCoolDownActive();
             }
-        } else if (_LaserCooldown == false)
+        }else if (_isSpecialShotActive == true && _LaserCooldown == false)
+        {
+            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            {
+                Instantiate(_specialShotPrefab, transform.position, Quaternion.identity);
+                _audioSource[0].Play();
+            }
+            else
+            {
+                LaserCoolDownActive();
+            }
+        } 
+        else if (_LaserCooldown == false)
         {
             if (GameManager.gameManager._playerEnergy.Energy > 0)
             {
@@ -260,6 +298,12 @@ public class Player : MonoBehaviour
         }
        
     }
+
+    public void SpecialShotActive()
+    {
+        _isSpecialShotActive = true;
+        StartCoroutine(SpecialShotPowerDownRoutine(10)); 
+    }
     
     public void LaserCoolDownActive()
     {
@@ -270,7 +314,7 @@ public class Player : MonoBehaviour
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
-        StartCoroutine(TripleShotPowerDownRoutine(5));
+        StartCoroutine(TripleShotPowerDownRoutine(10));
     }
     
     public void AmmoReloadActive()
@@ -351,6 +395,12 @@ public class Player : MonoBehaviour
     {
             yield return new WaitForSeconds(waitTime);
             _isTripleShotActive= false;
+    }
+    
+    IEnumerator SpecialShotPowerDownRoutine(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        _isSpecialShotActive= false;
     }
     
     IEnumerator AmmoReloadPowerDownRoutine(float waitTime)

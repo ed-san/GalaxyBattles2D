@@ -1561,6 +1561,8 @@ MonoBehaviour:
   _speedMultiplier: 2
   _laserPrefab: {fileID: 249049102865344551, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
   _tripleLaserPrefab: {fileID: 5879678250861086010, guid: 3db0b62e2223003478494bc5868bc5a3, type: 3}
+  _specialShotPrefab: {fileID: 4758301781083331235, guid: e0b54c832de493f439133990bdff73d0, type: 3}
+  _tripleSpecialShotPrefab: {fileID: 8052930229857573932, guid: bbf675981ac6e5644aaae044e38c13ad, type: 3}
   _shieldVisualizer: {fileID: 2069453735}
   _shieldDamagedVisualizer: {fileID: 841473181}
   _leftEngineVisualizer: {fileID: 45000746}
@@ -1637,7 +1639,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360997971}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.64, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2547,6 +2549,8 @@ MonoBehaviour:
   - {fileID: 5486634655708575127, guid: 0a69f7b8070036f42a2a352118a65089, type: 3}
   - {fileID: 116386065367581714, guid: fef6467502f81a442a6d0d74b092b1f4, type: 3}
   _spawnRate: 5
+  _specialShotSpawnRate: 30
+  _specialShotPrefab: {fileID: 4989294637185965692, guid: 8b86f5bdd2b0fca4dbc2fdf97ba3267e, type: 3}
 --- !u!1 &2069453735
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,4 +72,14 @@ public class Laser : MonoBehaviour
             }
         }
     }
+
+    public float GetProjectileSpeed()
+    {
+        return _projectileSpeed;
+    }
+    
+    public void SetProjectileSpeed(float speed)
+    {
+        _projectileSpeed = speed;
+    }
 }

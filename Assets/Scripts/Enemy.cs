@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,7 +22,7 @@ public class Enemy : MonoBehaviour
         _player = GameObject.Find("Player").GetComponent<Player>();
         _anim = GetComponent<Animator>();
         _audioSource = GetComponents<AudioSource>();
-        
+
         if (_player == null)
         {
             Debug.LogError("The Player is NULL.");
@@ -40,7 +41,7 @@ public class Enemy : MonoBehaviour
         {
             //_audioSource.clip = _enemyExplodingSoundClip;
         }
-        
+
     }
 
     void Update()
@@ -94,6 +95,31 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Laser"))
         {   
             Destroy(other.gameObject);     
+            if (_player != null)
+            {
+                _player.IncreaseScore(10);
+            }
+            
+            _anim.SetTrigger("OnEnemyDeath");
+            _enemySpeed = 0;
+            _audioSource[0].Play();
+            
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.2f);
+        }
+        
+        if (other.CompareTag("SpecialShot"))
+        {
+            SpriteRenderer specialShotSprite = other.gameObject.GetComponent<SpriteRenderer>();
+            specialShotSprite.enabled = false;
+            Laser specialShot = other.gameObject.GetComponent<Laser>();
+            specialShot.SetProjectileSpeed(0);
+            ParticleSystem specialShotParticles = other.gameObject.GetComponent<ParticleSystem>();
+            specialShotParticles.Play();
+            CircleCollider2D specialShotColliderRadius = other.gameObject.GetComponent<CircleCollider2D>();
+            specialShotColliderRadius.radius = 18.3f;
+            Destroy(other.gameObject, 4.0f);
+
             if (_player != null)
             {
                 _player.IncreaseScore(10);
