@@ -302,7 +302,7 @@ public class Player : MonoBehaviour
     public void SpecialShotActive()
     {
         _isSpecialShotActive = true;
-        StartCoroutine(SpecialShotPowerDownRoutine(10)); 
+        StartCoroutine(SpecialShotPowerDownRoutine(5)); 
     }
     
     public void LaserCoolDownActive()
@@ -314,7 +314,7 @@ public class Player : MonoBehaviour
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
-        StartCoroutine(TripleShotPowerDownRoutine(10));
+        StartCoroutine(TripleShotPowerDownRoutine(5));
     }
     
     public void AmmoReloadActive()
