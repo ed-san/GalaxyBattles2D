@@ -11,6 +11,8 @@ TagManager:
   - Speed
   - Powerups
   - SpecialShot
+  - ThrusterEnergyBar
+  - AmmoEnergyBar
   layers:
   - Default
   - TransparentFX

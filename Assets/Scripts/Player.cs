@@ -13,7 +13,8 @@ public class Player : MonoBehaviour
     [SerializeField] 
     private float _thrusterSpeed;
     [SerializeField] 
-    private float _thrusterMultiplier = 0.0f; 
+    private float _thrusterMultiplier = 0.0f;
+    private bool _boostedThrusterActive = true;
     [SerializeField]
     private float _speedMultiplier = 3.0f;
     [SerializeField]
@@ -60,9 +61,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private AudioSource[] _audioSource;
     [SerializeField]
-    private EnergyBarUI _energyBar;
+    private EnergyBarUI _ammoEnergyBarUI;
     [SerializeField] 
     private bool _LaserCooldown = false;
+    [SerializeField]
+    private EnergyBarUI _thrusterEnergyBar;
+    private Slider _thrusterSlider;
+    
 
     void Start()
     { 
@@ -70,6 +75,12 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponents<AudioSource>();
+        _thrusterSlider = _thrusterEnergyBar.GetComponent<Slider>();
+        
+        if (_thrusterSlider == null)
+        {
+            Debug.LogError("BoostThruster_EB_Fill Slider component is null!");
+        }
 
         if (_spawnManager == null)
         {
@@ -94,10 +105,10 @@ public class Player : MonoBehaviour
         ThrusterEngaged();
         
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
-        {
+        {     
               FireLaser();
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (_isTripleShotActive == true && _isSpecialShotActive == true)
@@ -141,16 +152,28 @@ public class Player : MonoBehaviour
         
     }
 
-    private void LaserEnergyCost(int energyUsed)
+    private void ThrusterEnergyCost(int energyUsed)
     {
-        GameManager.gameManager._playerEnergy.EnergyUseAmount(energyUsed);
-        _energyBar.SetEnergy(GameManager.gameManager._playerEnergy.Energy);
+        GameManager.gameManager._thrusterEnergy.EnergyUseAmount(energyUsed);
+        _thrusterEnergyBar.SetEnergy(GameManager.gameManager._thrusterEnergy.Energy);
+
     }
     
+    private void LaserEnergyCost(int energyUsed)
+    {
+        GameManager.gameManager._ammoEnergy.EnergyUseAmount(energyUsed);
+        _ammoEnergyBarUI.SetEnergy(GameManager.gameManager._ammoEnergy.Energy);
+        /*int energyCost = Mathf.RoundToInt(energyUsed);
+        GameManager.gameManager._ammoEnergy.EnergyUseAmount(energyCost);
+        _energyBar.SetEnergy(GameManager.gameManager._ammoEnergy.Energy);
+        */
+    }
+    
+
     private void LaserCostRegen(int regenAmt)
     {
-        GameManager.gameManager._playerEnergy.EnergyRegenAmount(regenAmt);
-        _energyBar.SetEnergy(GameManager.gameManager._playerEnergy.Energy);
+        GameManager.gameManager._ammoEnergy.EnergyRegenAmount(regenAmt);
+        _ammoEnergyBarUI.SetEnergy(GameManager.gameManager._ammoEnergy.Energy);
     }
     
     /// <summary>
@@ -198,7 +221,7 @@ public class Player : MonoBehaviour
         _canFire = Time.time + _fireRate;
         if (_isTripleShotActive == true && _isSpecialShotActive == true && _LaserCooldown == false)
         {
-            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            if (GameManager.gameManager._ammoEnergy.Energy > 0)
             {
                 Instantiate(_tripleSpecialShotPrefab, transform.position, Quaternion.identity);
                 _audioSource[0].Play();
@@ -210,7 +233,7 @@ public class Player : MonoBehaviour
         }
         else if (_isTripleShotActive == true && _LaserCooldown == false)
         {
-            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            if (GameManager.gameManager._ammoEnergy.Energy > 0)
             {
                 Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
                 _audioSource[0].Play();
@@ -221,7 +244,7 @@ public class Player : MonoBehaviour
             }
         }else if (_isSpecialShotActive == true && _LaserCooldown == false)
         {
-            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            if (GameManager.gameManager._ammoEnergy.Energy > 0)
             {
                 Instantiate(_specialShotPrefab, transform.position, Quaternion.identity);
                 _audioSource[0].Play();
@@ -233,7 +256,7 @@ public class Player : MonoBehaviour
         } 
         else if (_LaserCooldown == false)
         {
-            if (GameManager.gameManager._playerEnergy.Energy > 0)
+            if (GameManager.gameManager._ammoEnergy.Energy > 0)
             {
                 Instantiate(_laserPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity); 
                 
@@ -443,20 +466,60 @@ public class Player : MonoBehaviour
         Instantiate(_playerDeath, transform.position, Quaternion.identity);
         Destroy(this.gameObject);
     }
+    
+   void ThrusterEngaged()
+   {
+       if (_boostedThrusterActive && Input.GetKey(KeyCode.LeftShift))
+       {
+           if (GameManager.gameManager._thrusterEnergy.GetCurrentEnergy() > 0)
+           {
+               _thrusterMultiplier = .75f;
+               _thrusterSpeed = _speedMultiplier + _thrusterMultiplier;
+               _thrusterBoostPrefab.SetActive(true);
+               ThrusterEnergyCost(1);
+           }
+           else
+           {
+               _thrusterSpeed = 1.0f;
+               _thrusterBoostPrefab.SetActive(false);
+               StartCoroutine(BoostedThrusterCoolDownRoutine(5));
+               StartCoroutine(RegenerateEnergyAndLockBoostRoutine(5));
+           }
+       }
+       else
+       {
+           _thrusterSpeed = 1.0f;
+           _thrusterBoostPrefab.SetActive(false);
+       }
+   }
 
-    void ThrusterEngaged()
-    {
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            _thrusterMultiplier = .75f;
-            _thrusterSpeed = _speedMultiplier + _thrusterMultiplier;
-            _thrusterBoostPrefab.SetActive(true);
-        }
-        else
-        {
-            _thrusterSpeed = 1.0f;
-            _thrusterBoostPrefab.SetActive(false);
-        }
-    }
+   IEnumerator RegenerateEnergyAndLockBoostRoutine(float regenTime)
+   {
+       int initialEnergy = GameManager.gameManager._thrusterEnergy.GetCurrentEnergy();
+       _audioSource[2].Play();
+       // Wait for energy to regenerate over time
+       yield return StartCoroutine(GameManager.gameManager._thrusterEnergy.RegenerateEnergyOverTime(5,_thrusterSlider));
+       _audioSource[2].Stop();
+       // Lock boost until energy reaches full
+       while (!GameManager.gameManager._thrusterEnergy.IsFull())
+       {   
+           yield return null;
+       }
+
+       // Restore ability to use boost
+       
+       _boostedThrusterActive = true;
+   }
+
+   IEnumerator BoostedThrusterCoolDownRoutine(float cooldownTime)
+   {
+       _boostedThrusterActive = false;
+       
+       // Wait for cooldown time
+       yield return new WaitForSeconds(cooldownTime);
+       
+       _boostedThrusterActive = true;
+   }
+
 
 }
