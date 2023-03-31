@@ -8,8 +8,17 @@ public class Laser : MonoBehaviour
     private float _projectileSpeed = 10.0f;
 
     private bool _isEnemyLaser = false;
+    // Add reference to CameraShake script
+    private CameraShake _cameraShake;
+    [SerializeField]
+    private float _cameraShakeStrength = 5.0f;
 
-
+    // Initialize _cameraShake reference in Start() method
+    private void Start()
+    {
+        _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
+    }
+    
     void Update()
     {
         
@@ -68,6 +77,8 @@ public class Laser : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
+                // Call the Shake() method on _cameraShake reference
+                _cameraShake.Shake(_cameraShakeStrength);
                player.Damage(); 
             }
         }

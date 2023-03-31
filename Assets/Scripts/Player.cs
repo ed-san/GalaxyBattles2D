@@ -67,7 +67,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private EnergyBarUI _thrusterEnergyBar;
     private Slider _thrusterSlider;
-    
+
+
 
     void Start()
     { 
@@ -76,7 +77,8 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponents<AudioSource>();
         _thrusterSlider = _thrusterEnergyBar.GetComponent<Slider>();
-        
+
+
         if (_thrusterSlider == null)
         {
             Debug.LogError("BoostThruster_EB_Fill Slider component is null!");

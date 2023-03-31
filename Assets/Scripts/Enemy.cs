@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     private float _enemySpeed = 4.0f;
     private Player _player;
     private Animator _anim;
+    private CameraShake _cameraShake;
     [SerializeField]
     private AudioClip _enemyExplodingSoundClip;
     [SerializeField]
@@ -17,12 +18,20 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _fireRate;
     private float _canFire = -1.0f;
+    [SerializeField]
+    private float _cameraShakeStrength = 5.0f;
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _anim = GetComponent<Animator>();
         _audioSource = GetComponents<AudioSource>();
+        _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
 
+        if (_cameraShake == null)
+        {
+            Debug.LogError("The CameraShake script isn't attached to main cam.");
+        }
+        
         if (_player == null)
         {
             Debug.LogError("The Player is NULL.");
@@ -84,6 +93,7 @@ public class Enemy : MonoBehaviour
             if (_player != null)
             {
                 _player.Damage();
+                _cameraShake.Shake(_cameraShakeStrength);
             }
             
             _anim.SetTrigger("OnEnemyDeath");

@@ -46,10 +46,6 @@ public class EnergyBar
   /// </summary>
   public void EnergyUseAmount(int energyUsed)
   {
-    //if (_currentEnergy > 0)
-    //{
-      //_currentEnergy -= energyUsed;
-    //}
     _currentEnergy = Mathf.Max(_currentEnergy - energyUsed, 0);
   }
   
