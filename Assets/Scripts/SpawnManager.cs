@@ -33,6 +33,15 @@ public class SpawnManager : MonoBehaviour
             Vector3 spawnPosition = new Vector3(Random.Range(-10.14f,10.14f), 12.0f,0);
             GameObject newEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
+            
+            // Randomly choose a movement type for the spawned enemy
+            Enemy.MovementType randomMovementType = (Enemy.MovementType)Random.Range(0, System.Enum.GetValues(typeof(Enemy.MovementType)).Length);
+            Enemy enemyScript = newEnemy.GetComponent<Enemy>();
+            if (enemyScript != null)
+            {
+                enemyScript.SetMovementType(Enemy.MovementType.Angle);
+            }
+  
             yield return new WaitForSeconds(waitTime);
         }
         

@@ -7,16 +7,11 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField]
-    private TMP_Text _scoreText;
-    [SerializeField]
-    private Image _livesImage;
-    [SerializeField]
-    private Sprite[] _liveSprites;
-    [SerializeField]
-    private TMP_Text _gameOverText;
-    [SerializeField]
-    private TMP_Text _restartText;
+    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private Image _livesImage;
+    [SerializeField] private Sprite[] _liveSprites;
+    [SerializeField] private TMP_Text _gameOverText;
+    [SerializeField] private TMP_Text _restartText;
     private GameManager _gameManager;
 
     void Start()
@@ -26,7 +21,7 @@ public class UIManager : MonoBehaviour
         _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
 
-        if(_gameManager == null)
+        if (_gameManager == null)
         {
             Debug.LogError("Game_Manager is NULL");
         }
@@ -39,7 +34,8 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int currentLives)
     {
-        _livesImage.sprite = _liveSprites[currentLives];
+        int clampedLives = Mathf.Clamp(currentLives, 0, _liveSprites.Length - 1);
+        _livesImage.sprite = _liveSprites[clampedLives];
 
         if (currentLives == 0)
         {
@@ -57,7 +53,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator GameOverFlickerRoutine()
     {
-        while(true)
+        while (true)
         {
             _gameOverText.text = "GAME OVER";
             yield return new WaitForSeconds(.5f);
