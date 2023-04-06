@@ -7,16 +7,26 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
 
-    [SerializeField] private TMP_Text _scoreText;
-    [SerializeField] private Image _livesImage;
-    [SerializeField] private Sprite[] _liveSprites;
-    [SerializeField] private TMP_Text _gameOverText;
-    [SerializeField] private TMP_Text _restartText;
+    [SerializeField] 
+    private TMP_Text _scoreText;
+    [SerializeField]
+    private TMP_Text _ammoText;
+    [SerializeField] 
+    private Image _livesImage;
+    [SerializeField] 
+    private Sprite[] _liveSprites;
+    [SerializeField] 
+    private TMP_Text _gameOverText;
+    [SerializeField] 
+    private TMP_Text _restartText;
     private GameManager _gameManager;
+    [SerializeField]
+    private Player _player;
 
     void Start()
     {
         _scoreText.text = "Score: " + 0;
+        _ammoText.text = $"Energy: {_player.AmmoCount}";
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
@@ -31,6 +41,12 @@ public class UIManager : MonoBehaviour
     {
         return _scoreText.text = "Score: " + score;
     }
+
+    public string UpdateAmmoCount(int ammo)
+    {
+        return _ammoText.text = $"Energy: {ammo}";
+    }  
+        
 
     public void UpdateLives(int currentLives)
     {

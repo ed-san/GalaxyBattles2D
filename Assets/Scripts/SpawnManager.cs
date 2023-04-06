@@ -39,7 +39,7 @@ public class SpawnManager : MonoBehaviour
             Enemy enemyScript = newEnemy.GetComponent<Enemy>();
             if (enemyScript != null)
             {
-                enemyScript.SetMovementType(Enemy.MovementType.Angle);
+                enemyScript.SetMovementType(randomMovementType);
             }
   
             yield return new WaitForSeconds(waitTime);

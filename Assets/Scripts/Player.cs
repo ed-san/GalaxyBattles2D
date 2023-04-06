@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
     private bool _coroutineActive = false;
     [SerializeField]
     private int _score = 0;
+    private int _ammoCount = 15;
     private UIManager _uiManager;
 
     //variable to store audio clip
@@ -67,9 +68,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private EnergyBarUI _thrusterEnergyBar;
     private Slider _thrusterSlider;
-
-
-
+    private bool _isEnergyRegenRunning = false;
+    
     void Start()
     { 
         transform.position = new Vector3(0, 0, 0);
@@ -105,42 +105,8 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
         ThrusterEngaged();
-        
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
-        {     
-              FireLaser();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (_isTripleShotActive == true && _isSpecialShotActive == true)
-            {
-                LaserEnergyCost(8);
-                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
-            }
-            else if (_isTripleShotActive == true)
-            {
-                LaserEnergyCost(3);
-                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
-            } 
-            else if (_isSpecialShotActive == true)
-            {
-                LaserEnergyCost(5);
-                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
-            }
-            else
-            {
-                LaserEnergyCost(1);
-                //Debug.Log(GameManager.gameManager._playerEnergy.Energy); 
-            }
-            
-        }
-        
-        if (_isAmmoReloadActive == true)
-        {
-            LaserCostRegen(15);
-        }
-        
+        FireLaser();
+
         if (_lives.Equals(3))
         {
             _rightEngineVisualizer.SetActive(false);
@@ -154,6 +120,83 @@ public class Player : MonoBehaviour
         
     }
 
+    void FireLaser()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        {
+            int energyCost = CalculateLaserEnergyCost();
+
+            if (!AmmoIsEmpty() && GameManager.gameManager._ammoEnergy.Energy >= energyCost)
+            {
+                InstantiateLaser();
+                LaserEnergyCost(energyCost);
+                _canFire = Time.time + _fireRate;
+            }
+            else if (AmmoIsEmpty() && !_isEnergyRegenRunning)
+            {
+                StartCoroutine(LaserEnergyRegensRoutine(3.0f)); 
+            }
+        }
+    }
+    
+     /// <summary>
+    ///Spawns the appropriate laser prefab based on active power-ups,
+    ///offset from the player's position, and plays an audio effect.
+    /// </summary>
+    
+    void InstantiateLaser()
+    {
+        if (_LaserCooldown == false)
+        {
+            GameObject shotPrefab = null;
+
+            if (_isTripleShotActive && _isSpecialShotActive)
+            {
+                shotPrefab = _tripleSpecialShotPrefab;
+            }
+            else if (_isTripleShotActive)
+            {
+                shotPrefab = _tripleLaserPrefab;
+            }
+            else if (_isSpecialShotActive)
+            {
+                shotPrefab = _specialShotPrefab;
+            }
+            else
+            {
+                shotPrefab = _laserPrefab;
+            }
+
+            Instantiate(shotPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity);
+            _audioSource[0].Play();
+        }
+    }
+    
+    int CalculateLaserEnergyCost()
+    {
+        int baseCost = 1; // Set the base energy cost for a regular shot
+        int tripleShotCost = 3; // Set the energy cost for a triple shot
+        int specialShotCost = 5; // Set the energy cost for a special shot
+        int tripleSpecialShotCost = 8; // Set the energy cost for a triple special shot
+
+        if (_isTripleShotActive && _isSpecialShotActive)
+        {
+            return tripleSpecialShotCost;
+        }
+        else if (_isTripleShotActive)
+        {
+            return tripleShotCost;
+        }
+        else if (_isSpecialShotActive)
+        {
+            return specialShotCost;
+        }
+        else
+        {
+            return baseCost;
+        }
+    }
+
     private void ThrusterEnergyCost(int energyUsed)
     {
         GameManager.gameManager._thrusterEnergy.EnergyUseAmount(energyUsed);
@@ -165,10 +208,7 @@ public class Player : MonoBehaviour
     {
         GameManager.gameManager._ammoEnergy.EnergyUseAmount(energyUsed);
         _ammoEnergyBarUI.SetEnergy(GameManager.gameManager._ammoEnergy.Energy);
-        /*int energyCost = Mathf.RoundToInt(energyUsed);
-        GameManager.gameManager._ammoEnergy.EnergyUseAmount(energyCost);
-        _energyBar.SetEnergy(GameManager.gameManager._ammoEnergy.Energy);
-        */
+        DecreaseAmmoCount(energyUsed);
     }
     
 
@@ -176,6 +216,7 @@ public class Player : MonoBehaviour
     {
         GameManager.gameManager._ammoEnergy.EnergyRegenAmount(regenAmt);
         _ammoEnergyBarUI.SetEnergy(GameManager.gameManager._ammoEnergy.Energy);
+        IncreaseAmmoCount(regenAmt);
     }
     
     /// <summary>
@@ -212,65 +253,7 @@ public class Player : MonoBehaviour
             transform.position = new Vector3(xPosOffScreenLeft,  yPosOffScreenLeft, 0);
         }
     }
-
-    /// <summary>
-    /// Adds the fire rate delay to the current time(in seconds) of the frame and spawns
-    /// the laser prefab object with a Y-Axis off-set from the player object location.
-    /// </summary>
     
-    void FireLaser()
-    {
-        _canFire = Time.time + _fireRate;
-        if (_isTripleShotActive == true && _isSpecialShotActive == true && _LaserCooldown == false)
-        {
-            if (GameManager.gameManager._ammoEnergy.Energy > 0)
-            {
-                Instantiate(_tripleSpecialShotPrefab, transform.position, Quaternion.identity);
-                _audioSource[0].Play();
-            }
-            else
-            {
-                LaserCoolDownActive();
-            }
-        }
-        else if (_isTripleShotActive == true && _LaserCooldown == false)
-        {
-            if (GameManager.gameManager._ammoEnergy.Energy > 0)
-            {
-                Instantiate(_tripleLaserPrefab, transform.position, Quaternion.identity);
-                _audioSource[0].Play();
-            }
-            else
-            {
-                LaserCoolDownActive();
-            }
-        }else if (_isSpecialShotActive == true && _LaserCooldown == false)
-        {
-            if (GameManager.gameManager._ammoEnergy.Energy > 0)
-            {
-                Instantiate(_specialShotPrefab, transform.position, Quaternion.identity);
-                _audioSource[0].Play();
-            }
-            else
-            {
-                LaserCoolDownActive();
-            }
-        } 
-        else if (_LaserCooldown == false)
-        {
-            if (GameManager.gameManager._ammoEnergy.Energy > 0)
-            {
-                Instantiate(_laserPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity); 
-                
-                _audioSource[0].Play();
-            }
-            else
-            {
-                LaserCoolDownActive();
-            }
-        }
-
-    }
 
     public void Damage()
     {
@@ -345,6 +328,7 @@ public class Player : MonoBehaviour
     public void AmmoReloadActive()
     {
         _isAmmoReloadActive = true;
+        LaserCostRegen(15 - GameManager.gameManager._ammoEnergy.Energy);
         StartCoroutine(AmmoReloadPowerDownRoutine(.5f));
     }
 
@@ -409,11 +393,13 @@ public class Player : MonoBehaviour
 
     IEnumerator LaserEnergyRegensRoutine(float waitTime)
     {
+        _isEnergyRegenRunning = true;
         _audioSource[1].Play();
         yield return new WaitForSeconds(waitTime);
         LaserCostRegen(15);
         _LaserCooldown = false;
         _audioSource[1].Stop();
+        _isEnergyRegenRunning = false;
     }
 
     IEnumerator TripleShotPowerDownRoutine(float waitTime)
@@ -459,6 +445,28 @@ public class Player : MonoBehaviour
     {
         _score += playerScore;
         _uiManager.UpdateScore(_score);
+    }
+
+    public void IncreaseAmmoCount(int shotRecharged)
+    {
+        _ammoCount += shotRecharged;
+        _uiManager.UpdateAmmoCount(_ammoCount);
+    }
+
+    public void DecreaseAmmoCount(int shotFired)
+    {
+        _ammoCount -= shotFired;
+        _uiManager.UpdateAmmoCount(_ammoCount);
+    }
+    
+    public bool AmmoIsEmpty()
+    {
+        return _ammoCount == 0;
+    }
+
+    public int AmmoCount
+    {
+        get { return _ammoCount;}
     }
 
     void DestroyedPlayerSequence()
@@ -522,6 +530,5 @@ public class Player : MonoBehaviour
        
        _boostedThrusterActive = true;
    }
-
-
+   
 }
