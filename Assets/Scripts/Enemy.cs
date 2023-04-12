@@ -43,7 +43,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The CameraShake script isn't attached to main cam.");
         }
-
+        
         if (_player == null)
         {
             Debug.LogError("The Player is NULL.");
@@ -71,36 +71,36 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-
         CalculateMovement();
-        // Check if the enemy has entered the visible area
-        if (transform.position.y <= 5.5f)
-        {
-            _hasEnteredView = true;
-        }
-
-        // Check if the enemy has reached the start position for the "Circle" movement type
-        if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
-        {
-            _hasReachedCircleStartPosition = true;
-            _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
-        }
-
-        // Check if the enemy has a clear line of sight to the player before firing
-        if (!_isDestroyed && Time.time > _canFire)
-        {
-            SetFireRateForMovementType();
-            _canFire = Time.time + _fireRate;
-
-            GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
-            enemyLaser.layer = LayerMask.NameToLayer("Enemy Laser"); // Set the instantiated laser's layer to "Enemy Laser"
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-            foreach (Laser laser in lasers)
+            // Check if the enemy has entered the visible area
+            if (transform.position.y <= 5.5f)
             {
-                laser.AssignEnemyLaser();
+                _hasEnteredView = true;
             }
-        }
+
+            // Check if the enemy has reached the start position for the "Circle" movement type
+            if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
+            {
+                _hasReachedCircleStartPosition = true;
+                _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
+            }
+
+            // Check if the enemy has a clear line of sight to the player before firing
+            if (!_isDestroyed && Time.time > _canFire)
+            {
+                SetFireRateForMovementType();
+                _canFire = Time.time + _fireRate;
+
+                GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+                enemyLaser.layer =
+                    LayerMask.NameToLayer("Enemy Laser"); // Set the instantiated laser's layer to "Enemy Laser"
+                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+                foreach (Laser laser in lasers)
+                {
+                    laser.AssignEnemyLaser();
+                }
+            }
 
     }
 
@@ -290,6 +290,8 @@ public class Enemy : MonoBehaviour
                 throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
         }
     }
+    
+    
     
 
 }

@@ -8,14 +8,21 @@ public class Asteroid : MonoBehaviour
     [SerializeField] 
     private GameObject _asteroidExplosionPrefab;
     private SpawnManager _spawnManager;
+    private UIManager _uiManager;
 
     private void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
         if(_spawnManager == null)
         {
             Debug.LogError("Spawn_Manager is NULL!");
+        }
+        
+        if (_uiManager == null)
+        {
+            Debug.LogError("UI_Manager is NULL!");
         }
 
     }
@@ -36,7 +43,9 @@ public class Asteroid : MonoBehaviour
             Vector3 spawnPosition = this.transform.position;
             Instantiate(_asteroidExplosionPrefab, spawnPosition, Quaternion.identity);
             Destroy(other.gameObject);
+            _uiManager.UpdateWaveCount(1);
             _spawnManager.StartSpawning();
+            
             _astroRotationSpeed = 0.0f;
             Destroy(this.gameObject, 0.2f);
         }
