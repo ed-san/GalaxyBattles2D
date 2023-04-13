@@ -3356,6 +3356,8 @@ MonoBehaviour:
   - {fileID: 101841309452186699, guid: ca07932b3f7ef5f498fb1a6c0eaebdbb, type: 3}
   - {fileID: 5486634655708575127, guid: 0a69f7b8070036f42a2a352118a65089, type: 3}
   - {fileID: 116386065367581714, guid: fef6467502f81a442a6d0d74b092b1f4, type: 3}
+  - {fileID: 5486634655708575127, guid: 6394e9d0cc2121f4192ce16365f2125e, type: 3}
+  - {fileID: 116386065367581714, guid: b1bcfde8c8ef018408e9ad46f047feef, type: 3}
   _spawnRate: 5
   _specialShotSpawnRate: 30
   _specialShotPrefab: {fileID: 4989294637185965692, guid: 8b86f5bdd2b0fca4dbc2fdf97ba3267e, type: 3}

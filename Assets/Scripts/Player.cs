@@ -360,6 +360,30 @@ public class Player : MonoBehaviour
         _isSpeedBoostActive = true;
         StartMyCoroutine();
     }
+
+
+    public void DrainEnergyActive()
+    {
+        LaserEnergyCost(15);
+        _ammoCount = 0;
+        _uiManager.UpdateAmmoCount(_ammoCount);
+    }
+    
+    public void TakeDamageActive()
+    {
+        // Deal damage to player
+        _lives--;
+
+        // Update UI
+        _uiManager.UpdateLives(_lives);
+
+        // Check if the player has no more lives
+        if (_lives < 1)
+        {
+            // Destroy the player
+            DestroyedPlayerSequence();
+        }
+    }
    
         void StartMyCoroutine()
     {
