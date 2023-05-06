@@ -1,6 +1,8 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using System.Collections;
+
 
 public class Laser : MonoBehaviour
 {
@@ -63,7 +65,46 @@ public class Laser : MonoBehaviour
 
             Destroy(this.gameObject);
         }
+        
+        // if gameObject is a laser from AoeEnemy and X-Axis position is less than -13.5 or greater than 13.5, destroy laser object
+        if (gameObject.CompareTag("AoeLaser"))
+        {
+            // Check if X-Axis position is less than -13.5, destroy laser object
+            if (transform.position.x < -16.0f)
+            {
+                Destroy(this.gameObject);
+                DetachChildrenFromParent("AoeEnemyLaserParent");
+            }
+        
+            // Check if X-Axis position is greater than 13.5, destroy laser object
+            if (transform.position.x > 16.0f)
+            {
+                Destroy(this.gameObject);
+                DetachChildrenFromParent("AoeEnemyLaserParent");
+            }
+        }
+        
     }
+
+
+    void DetachChildrenFromParent(string tag)
+    {
+        GameObject[] objectsToDetach = GameObject.FindGameObjectsWithTag(tag);
+        foreach (GameObject obj in objectsToDetach)
+        {
+            if (obj.transform.childCount > 0)
+            {
+                for (int i = obj.transform.childCount - 1; i >= 0; i--)
+                {
+                    obj.transform.GetChild(i).parent = null;
+                }
+                // Destroy the parent object after detaching its children
+                Destroy(obj);
+            }
+        }
+    }
+
+    
 
     public void AssignEnemyLaser()
     {

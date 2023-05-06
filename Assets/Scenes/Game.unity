@@ -2350,7 +2350,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360997971}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.13, y: -2.43, z: 0}
+  m_LocalPosition: {x: 0.08, y: -2.43, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3349,6 +3349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 983328527700868596, guid: d72642f3e7eb7804c8cedc4cfc85863f, type: 3}
+  _aoeEnemyPrefab: {fileID: 3798136639926845014, guid: c095bcb7b5f4cbf478c945b23e08ae53, type: 3}
   _enemyContainer: {fileID: 1618635406}
   _powerups:
   - {fileID: 1556239438646164312, guid: dd5b05bbc3da0954abec133f0b998951, type: 3}
@@ -3360,6 +3361,7 @@ MonoBehaviour:
   - {fileID: 116386065367581714, guid: b1bcfde8c8ef018408e9ad46f047feef, type: 3}
   _spawnRate: 5
   _specialShotSpawnRate: 30
+  _aoeEnemySpawnRate: 30
   _specialShotPrefab: {fileID: 4989294637185965692, guid: 8b86f5bdd2b0fca4dbc2fdf97ba3267e, type: 3}
 --- !u!1 &2069453735
 GameObject:

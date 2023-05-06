@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5744973759964934769}
   - component: {fileID: 7200678059928926275}
-  m_Layer: 8
+  m_Layer: 7
   m_Name: Enemy_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 249049102865344551, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -601551789
       objectReference: {fileID: 0}
     - target: {fileID: 8724879031524747514, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_RootOrder
@@ -209,7 +221,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 249049102865344551, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_SortingLayer
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -601551789
       objectReference: {fileID: 0}
     - target: {fileID: 8724879031524747514, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_RootOrder

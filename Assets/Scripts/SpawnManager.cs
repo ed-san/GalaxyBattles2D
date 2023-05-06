@@ -8,6 +8,8 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _enemyPrefab;
+    [SerializeField] 
+    private GameObject _aoeEnemyPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
@@ -17,6 +19,8 @@ public class SpawnManager : MonoBehaviour
     private bool _stopSpawning = false;
     [SerializeField] 
     private float _specialShotSpawnRate = 30.0f;
+    [SerializeField] 
+    private float _aoeEnemySpawnRate = 30.0f;
     [SerializeField] 
     private GameObject _specialShotPrefab;
     private float _waveDuration = 10.0f;
@@ -39,10 +43,10 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawning()
     {
+        StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
+        StartCoroutine(WaveManagement(_wave, _waveDuration));
         StartCoroutine(SpawnPowerupRoutine());
         StartCoroutine(SpecialBlastSpawnRoutine(_specialShotSpawnRate));
-        StartCoroutine(WaveManagement(_wave, _waveDuration));
-
     }
 
     IEnumerator WaveManagement(int _wave, float _waveDuration)
@@ -56,6 +60,7 @@ public class SpawnManager : MonoBehaviour
         _spawnRate = updatedSpawnRate;
         Enemy.MovementType  movementType = MovementTypeAssignment(_wave);
         StartCoroutine(SpawnEnemyRoutine(_spawnRate, _waveDuration, movementType));
+        
 
         yield return new WaitForSeconds(_waveDuration);
 
@@ -189,6 +194,26 @@ public class SpawnManager : MonoBehaviour
         { 
             Vector3 spawnPowPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             Instantiate(_specialShotPrefab, spawnPowPosition, Quaternion.identity);
+            yield return new WaitForSeconds(30.0f);
+        }
+        
+    }
+    
+    private IEnumerator AoeEnemySpawnRoutine(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        
+        while (_stopSpawning == false) 
+        { 
+            Vector3 spawnPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
+            GameObject aoeEnemy = Instantiate(_aoeEnemyPrefab, spawnPosition, Quaternion.identity);
+            aoeEnemy.transform.parent = _enemyContainer.transform;
+            Debug.Log("AoeEnemy Spawned called at: " + Time.time);
+            Enemy aoeEnemyScript = aoeEnemy.GetComponent<Enemy>();
+            if (aoeEnemyScript != null)
+            {
+                aoeEnemyScript.SetMovementType(Enemy.MovementType.Angle); // Set the desired movement type
+            }
             yield return new WaitForSeconds(30.0f);
         }
         

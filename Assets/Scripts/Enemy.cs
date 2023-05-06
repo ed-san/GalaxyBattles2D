@@ -28,6 +28,11 @@ public class Enemy : MonoBehaviour
     private float _circleRadius;
     private float _circleStartY;
     private float _angle; // Adjust this value to change the angle of descent
+    private bool _isStopped = false;
+    private float _stoppedMovementTime = 5.0f;
+
+
+
 
     private void Start()
     {
@@ -59,6 +64,7 @@ public class Enemy : MonoBehaviour
             Debug.LogError("Enemy prefab doesn't have audio source component!");
         }
 
+
     }
 
     public enum MovementType
@@ -71,25 +77,48 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        CalculateMovement();
-            // Check if the enemy has entered the visible area
-            if (transform.position.y <= 5.5f)
-            {
-                _hasEnteredView = true;
-            }
+        
 
-            // Check if the enemy has reached the start position for the "Circle" movement type
-            if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
-            {
-                _hasReachedCircleStartPosition = true;
-                _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
-            }
 
+            if (!_isStopped)
+            {
+                CalculateMovement();
+                
+                // Check if the enemy has entered the visible area
+                if (transform.position.y <= 5.5f)
+                {
+                    _hasEnteredView = true;
+                }
+
+                // Check if the enemy has reached the start position for the "Circle" movement type
+                if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
+                {
+                    _hasReachedCircleStartPosition = true;
+                    _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
+                }
+
+                
+                
+            }
+            
+            float targetY = 0.0f;
+            float threshold = 0.1f;
+            if (Mathf.Abs(transform.position.y - targetY) < threshold && gameObject.CompareTag("AoeEnemy"))
+            {
+                StartCoroutine(StopMovementForSeconds(_stoppedMovementTime));
+            }
+            
             // Check if the enemy has a clear line of sight to the player before firing
             if (!_isDestroyed && Time.time > _canFire)
             {
                 SetFireRateForMovementType();
                 _canFire = Time.time + _fireRate;
+                
+                // Update _canFire value when the enemy is stopped and is an AoeEnemy
+                if (_isStopped && gameObject.CompareTag("AoeEnemy"))
+                {
+                    _canFire = Time.time;
+                }
 
                 GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
                 enemyLaser.layer =
@@ -101,7 +130,10 @@ public class Enemy : MonoBehaviour
                     laser.AssignEnemyLaser();
                 }
             }
-
+                
+                
+           
+           
     }
 
     void CalculateMovement()
@@ -186,7 +218,7 @@ public class Enemy : MonoBehaviour
     {
 
         // Handles enemy collisions so that they don't destroy each other with their more dynamic movements.
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("AoeEnemy"))
         {
             StartCoroutine(PauseAndChangeMovement());
         }
@@ -208,19 +240,38 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("Laser"))
         {
-            Destroy(other.gameObject);
-            _isDestroyed = true;
+
+            if (gameObject.CompareTag("AoeEnemy"))
+            {
+                Destroy(other.gameObject);
+                _isDestroyed = true;
+                
+                _anim.SetTrigger("OnAoeEnemyDeath");
+                _enemySpeed = 0;
+                _audioSource[0].Play();
+
+                Destroy(GetComponent<Collider2D>());
+                Destroy(this.gameObject, 2.2f);
+            }
+            else
+            {
+                Destroy(other.gameObject);
+                _isDestroyed = true;
+                
+                _anim.SetTrigger("OnEnemyDeath");
+                _enemySpeed = 0;
+                _audioSource[0].Play();
+
+                Destroy(GetComponent<Collider2D>());
+                Destroy(this.gameObject, 2.2f);
+            }
+
             if (_player != null)
             {
                 _player.IncreaseScore(10);
             }
 
-            _anim.SetTrigger("OnEnemyDeath");
-            _enemySpeed = 0;
-            _audioSource[0].Play();
-
-            Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.2f);
+           
         }
 
         if (other.CompareTag("SpecialShot"))
@@ -291,7 +342,34 @@ public class Enemy : MonoBehaviour
         }
     }
     
+    private IEnumerator StopMovementForSeconds(float waitTime)
+    {
+        _isStopped = true;
+        // Store the original speed, movement type, and fire rate
+        float originalSpeed = _enemySpeed;
+        MovementType originalMovementType = _movementType;
+        float originalFireRate = _fireRate;
+
+        if (_isStopped)
+        {
+            // Set enemy speed to 0 to stop movement
+            _enemySpeed = 0;
+            // Quadruple the fire rate
+            _fireRate = .25f;
+        }
+        
+            // Wait for the specified duration
+            yield return new WaitForSeconds(waitTime);
+            
+            // Restore the original speed, movement type, and fire rate
+            _enemySpeed = originalSpeed;
+            _movementType = originalMovementType;
+            _fireRate = originalFireRate;
+            _isStopped = false;
+
+    }
     
+
     
 
 }

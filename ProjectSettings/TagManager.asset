@@ -13,6 +13,9 @@ TagManager:
   - SpecialShot
   - ThrusterEnergyBar
   - AmmoEnergyBar
+  - AoeEnemy
+  - AoeLaser
+  - AoeEnemyLaserParent
   layers:
   - Default
   - TransparentFX
@@ -55,6 +58,15 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 1473685981
+    locked: 0
+  - name: Enemy
+    uniqueID: 1159015941
+    locked: 0
+  - name: Aoe Enemy
+    uniqueID: 2640213445
+    locked: 0
+  - name: Enemy_Lasers
+    uniqueID: 3693415507
     locked: 0
   - name: Above Player
     uniqueID: 920655749
