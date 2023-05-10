@@ -30,6 +30,8 @@ public class Enemy : MonoBehaviour
     private float _angle; // Adjust this value to change the angle of descent
     private bool _isStopped = false;
     private float _stoppedMovementTime = 5.0f;
+    
+    
 
 
 
@@ -227,7 +229,7 @@ public class Enemy : MonoBehaviour
         {
             if (_player != null)
             {
-                _player.Damage();
+                _player.Damage(1);
                 _cameraShake.Shake(_cameraShakeStrength);
                 _isDestroyed = true;
             }
@@ -268,7 +270,29 @@ public class Enemy : MonoBehaviour
 
             if (_player != null)
             {
-                _player.IncreaseScore(10);
+                int scoreToAdd = 0;
+                switch (_movementType)
+                {
+                    case MovementType.StraightDown:
+                        scoreToAdd = 2;
+                        break;
+                    case MovementType.SineWave:
+                        scoreToAdd = 4;
+                        break;
+                    case MovementType.Circle:
+                        scoreToAdd = 8;
+                        break;
+                    case MovementType.Angle:
+                        scoreToAdd = 16;
+                        if (gameObject.CompareTag("AoeEnemy"))
+                        {
+                            scoreToAdd += 8;
+                        }
+                        break;
+                    default:
+                        throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
+                }
+                _player.IncreaseScore(scoreToAdd);
             }
 
            
@@ -276,30 +300,70 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("SpecialShot"))
         {
-            SpriteRenderer specialShotSprite = other.gameObject.GetComponent<SpriteRenderer>();
-            specialShotSprite.enabled = false;
-            Laser specialShot = other.gameObject.GetComponent<Laser>();
-            specialShot.SetProjectileSpeed(0);
-            ParticleSystem specialShotParticles = other.gameObject.GetComponent<ParticleSystem>();
-            specialShotParticles.Play();
-            CircleCollider2D specialShotColliderRadius = other.gameObject.GetComponent<CircleCollider2D>();
-            specialShotColliderRadius.radius = 18.3f;
-            Destroy(other.gameObject, 4.0f);
-            _isDestroyed = true;
+            
+                SpriteRenderer specialShotSprite = other.gameObject.GetComponent<SpriteRenderer>();
+                specialShotSprite.enabled = false;
+                Laser specialShot = other.gameObject.GetComponent<Laser>();
+                specialShot.SetProjectileSpeed(0);
+                ParticleSystem specialShotParticles = other.gameObject.GetComponent<ParticleSystem>();
+                specialShotParticles.Play();
+                CircleCollider2D specialShotColliderRadius = other.gameObject.GetComponent<CircleCollider2D>();
+                specialShotColliderRadius.radius = 18.3f;
+                Destroy(other.gameObject, 4.0f);
+                _isDestroyed = true;
 
-            if (_player != null)
-            {
-                _player.IncreaseScore(10);
+                if (gameObject.CompareTag("AoeEnemy"))
+                {
+                    _anim.SetTrigger("OnAoeEnemyDeath");
+                    _enemySpeed = 0;
+                    _audioSource[0].Play();
+
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(this.gameObject, 2.2f);
+                }
+
+                if (gameObject.CompareTag("Enemy"))
+                {
+                    _anim.SetTrigger("OnEnemyDeath");
+                    _enemySpeed = 0;
+                    _audioSource[0].Play();
+
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(this.gameObject, 2.2f);
+                }
+
+                if (_player != null)
+                {
+                    int scoreToAdd = 0;
+                    switch (_movementType)
+                    {
+                        case MovementType.StraightDown:
+                            scoreToAdd = 2;
+                            break;
+                        case MovementType.SineWave:
+                            scoreToAdd = 4;
+                            break;
+                        case MovementType.Circle:
+                            scoreToAdd = 8;
+                            break;
+                        case MovementType.Angle:
+                            scoreToAdd = 16;
+                            if (gameObject.CompareTag("AoeEnemy"))
+                            {
+                                scoreToAdd += 8;
+                            }
+                            break;
+                        default:
+                            throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
+                    }
+
+                    _player.IncreaseScore(scoreToAdd);
+                }
             }
-
-            _anim.SetTrigger("OnEnemyDeath");
-            _enemySpeed = 0;
-            _audioSource[0].Play();
-
-            Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.2f);
-        }
+        
     }
+    
+   
 
     private IEnumerator PauseAndChangeMovement()
     {

@@ -208,7 +208,7 @@ public class SpawnManager : MonoBehaviour
             Vector3 spawnPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             GameObject aoeEnemy = Instantiate(_aoeEnemyPrefab, spawnPosition, Quaternion.identity);
             aoeEnemy.transform.parent = _enemyContainer.transform;
-            Debug.Log("AoeEnemy Spawned called at: " + Time.time);
+            //Debug.Log("AoeEnemy Spawned called at: " + Time.time);
             Enemy aoeEnemyScript = aoeEnemy.GetComponent<Enemy>();
             if (aoeEnemyScript != null)
             {

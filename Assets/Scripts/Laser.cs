@@ -120,7 +120,7 @@ public class Laser : MonoBehaviour
             {
                 // Call the Shake() method on _cameraShake reference
                 _cameraShake.Shake(_cameraShakeStrength);
-               player.Damage(); 
+               player.Damage(1); 
             }
         }
     }
@@ -134,4 +134,6 @@ public class Laser : MonoBehaviour
     {
         _projectileSpeed = speed;
     }
+    
+    
 }

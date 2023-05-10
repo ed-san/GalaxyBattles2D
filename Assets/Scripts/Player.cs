@@ -69,6 +69,7 @@ public class Player : MonoBehaviour
     private EnergyBarUI _thrusterEnergyBar;
     private Slider _thrusterSlider;
     private bool _isEnergyRegenRunning = false;
+    private bool _takeDamageActivePow = false;
     
     void Start()
     { 
@@ -255,23 +256,29 @@ public class Player : MonoBehaviour
     }
     
 
-    public void Damage()
+    public void Damage(int damageAmount)
     {
-        if (_isShieldActive == true)
+        if (_isShieldActive || _isDamagedShieldActive && _takeDamageActivePow )
+        {
+            _isShieldActive = false;
+            _shieldVisualizer.SetActive(false);
+            _isDamagedShieldActive = false;
+            _shieldDamagedVisualizer.SetActive(false);
+            _takeDamageActivePow = false;
+        }
+        else if (_isShieldActive == true)
         {
             _isShieldActive = false;
             _shieldVisualizer.SetActive(false);
             DamagedShieldActive();
-            return;
         } else if (_isShieldActive == false && _isDamagedShieldActive == true)
         {
             _isDamagedShieldActive = false;
             _shieldDamagedVisualizer.SetActive(false);
-            return;
         }
         else
         {
-            _lives -= 1;
+            _lives -= damageAmount;
             
             if (_lives.Equals(2))
             {
@@ -371,18 +378,8 @@ public class Player : MonoBehaviour
     
     public void TakeDamageActive()
     {
-        // Deal damage to player
-        _lives--;
-
-        // Update UI
-        _uiManager.UpdateLives(_lives);
-
-        // Check if the player has no more lives
-        if (_lives < 1)
-        {
-            // Destroy the player
-            DestroyedPlayerSequence();
-        }
+        _takeDamageActivePow = true;
+        Damage(2);
     }
    
         void StartMyCoroutine()
