@@ -30,6 +30,9 @@ public class Enemy : MonoBehaviour
     private float _angle; // Adjust this value to change the angle of descent
     private bool _isStopped = false;
     private float _stoppedMovementTime = 5.0f;
+    private bool _isShieldActive = false;
+    [SerializeField]
+    private GameObject _shieldVisualizer;
     
     
 
@@ -85,7 +88,7 @@ public class Enemy : MonoBehaviour
             if (!_isStopped)
             {
                 CalculateMovement();
-                
+
                 // Check if the enemy has entered the visible area
                 if (transform.position.y <= 5.5f)
                 {
@@ -98,9 +101,15 @@ public class Enemy : MonoBehaviour
                     _hasReachedCircleStartPosition = true;
                     _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
                 }
+                
+                // Checks if enemy is gone off-screen, if movement type is 'Angle' enable shield.
+                if (transform.position.y <= -6.0f && _movementType == MovementType.Angle)
+                {
+                    _isShieldActive = true;
+                    _shieldVisualizer.SetActive(true);
+                }
 
-                
-                
+
             }
             
             float targetY = 0.0f;
@@ -242,64 +251,80 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("Laser"))
         {
+            if (_isShieldActive)
+            {
+                _audioSource[2].Play();
+                _isShieldActive = false;
+                _shieldVisualizer.SetActive(false);
+                return;
+            }
 
             if (gameObject.CompareTag("AoeEnemy"))
-            {
-                Destroy(other.gameObject);
-                _isDestroyed = true;
-                
-                _anim.SetTrigger("OnAoeEnemyDeath");
-                _enemySpeed = 0;
-                _audioSource[0].Play();
+                {
+                    Destroy(other.gameObject);
+                    _isDestroyed = true;
 
-                Destroy(GetComponent<Collider2D>());
-                Destroy(this.gameObject, 2.2f);
-            }
-            else
-            {
-                Destroy(other.gameObject);
-                _isDestroyed = true;
-                
-                _anim.SetTrigger("OnEnemyDeath");
-                _enemySpeed = 0;
-                _audioSource[0].Play();
+                    _anim.SetTrigger("OnAoeEnemyDeath");
+                    _enemySpeed = 0;
+                    _audioSource[0].Play();
 
-                Destroy(GetComponent<Collider2D>());
-                Destroy(this.gameObject, 2.2f);
-            }
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(this.gameObject, 2.2f);
+                }
+                else
+                {
+                    Destroy(other.gameObject);
+                    _isDestroyed = true;
+
+                    _anim.SetTrigger("OnEnemyDeath");
+                    _enemySpeed = 0;
+                    _audioSource[0].Play();
+
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(this.gameObject, 2.2f);
+                }
+            
 
             if (_player != null)
-            {
-                int scoreToAdd = 0;
-                switch (_movementType)
                 {
-                    case MovementType.StraightDown:
-                        scoreToAdd = 2;
-                        break;
-                    case MovementType.SineWave:
-                        scoreToAdd = 4;
-                        break;
-                    case MovementType.Circle:
-                        scoreToAdd = 8;
-                        break;
-                    case MovementType.Angle:
-                        scoreToAdd = 16;
-                        if (gameObject.CompareTag("AoeEnemy"))
-                        {
-                            scoreToAdd += 8;
-                        }
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
-                }
-                _player.IncreaseScore(scoreToAdd);
-            }
+                    int scoreToAdd = 0;
+                    switch (_movementType)
+                    {
+                        case MovementType.StraightDown:
+                            scoreToAdd = 2;
+                            break;
+                        case MovementType.SineWave:
+                            scoreToAdd = 4;
+                            break;
+                        case MovementType.Circle:
+                            scoreToAdd = 8;
+                            break;
+                        case MovementType.Angle:
+                            scoreToAdd = 16;
+                            if (gameObject.CompareTag("AoeEnemy"))
+                            {
+                                scoreToAdd += 8;
+                            }
 
-           
-        }
+                            break;
+                        default:
+                            throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
+                    }
+
+                    _player.IncreaseScore(scoreToAdd);
+                }
+
+            }
 
         if (other.CompareTag("SpecialShot"))
         {
+            if (_isShieldActive)
+            {
+                _audioSource[2].Play();
+                _isShieldActive = false;
+                _shieldVisualizer.SetActive(false);
+                return;
+            }
             
                 SpriteRenderer specialShotSprite = other.gameObject.GetComponent<SpriteRenderer>();
                 specialShotSprite.enabled = false;
