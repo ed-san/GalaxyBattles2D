@@ -89,16 +89,16 @@ public class SpawnManager : MonoBehaviour
 
         switch (wave)
         {
-            case int w when w >= 1 && w <= 5:
+            case int w when w >= 1 && w <= 5: //original values: 1:5
                 movementType = Enemy.MovementType.StraightDown;
                 break;
-            case int w when w >= 6 && w <= 10:
+            case int w when w >= 6 && w <= 10://original values: 6:10
                 movementType = Enemy.MovementType.Circle;
                 break;
-            case int w when w >= 11 && w <= 15:
+            case int w when w >= 11 && w <= 15://original values: 11:15
                 movementType = Enemy.MovementType.Angle;
                 break;
-            case int w when w >= 16 && w <= 20:
+            case int w when w >= 16 && w <= 20://original values: 16:20
                 movementType = Enemy.MovementType.SineWave;
                 break;
             case int w when w > 20:

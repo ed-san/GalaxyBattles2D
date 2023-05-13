@@ -33,6 +33,9 @@ public class Enemy : MonoBehaviour
     private bool _isShieldActive = false;
     [SerializeField]
     private GameObject _shieldVisualizer;
+    private bool _hasLineOfSight = false;
+    private Vector3 _direction = Vector3.zero;
+    private bool _isOriginallyAngle = false;
     
     
 
@@ -68,6 +71,9 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("Enemy prefab doesn't have audio source component!");
         }
+        
+        // Check the original movement type and set _isOriginallyAngle accordingly
+        _isOriginallyAngle = _movementType == MovementType.Angle;
 
 
     }
@@ -83,11 +89,10 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         
-
-
             if (!_isStopped)
             {
                 CalculateMovement();
+                CheckLineOfSight();
 
                 // Check if the enemy has entered the visible area
                 if (transform.position.y <= 5.5f)
@@ -101,14 +106,28 @@ public class Enemy : MonoBehaviour
                     _hasReachedCircleStartPosition = true;
                     _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
                 }
-                
-                // Checks if enemy is gone off-screen, if movement type is 'Angle' enable shield.
-                if (transform.position.y <= -6.0f && _movementType == MovementType.Angle)
-                {
-                    _isShieldActive = true;
-                    _shieldVisualizer.SetActive(true);
-                }
 
+
+                if (_hasLineOfSight == true && _movementType == MovementType.StraightDown)
+                {
+                    Debug.Log("Player is within view");
+                    _movementType = MovementType.Angle;
+                    
+                        if (_player != null)
+                        {
+                            if (_player.transform.position.x > transform.position.x)
+                            {
+                                // Player is to the right of the enemy. Move diagonally down-right.
+                                _direction = new Vector3(1, -1, 0).normalized;
+                            }
+                            else
+                            {
+                                // Player is to the left of the enemy. Move diagonally down-left.
+                                _direction = new Vector3(-1, -1, 0).normalized;
+                            }
+                        }
+                }
+                
 
             }
             
@@ -141,9 +160,7 @@ public class Enemy : MonoBehaviour
                     laser.AssignEnemyLaser();
                 }
             }
-                
-                
-           
+            
            
     }
 
@@ -173,11 +190,19 @@ public class Enemy : MonoBehaviour
                 break;
             case MovementType.Angle:
                 // Move at a custom angle (in degrees)
-                newPosition = new Vector3(
-                    transform.position.x + Mathf.Cos(Mathf.Deg2Rad * _angle) * currentEnemySpeed * Time.deltaTime,
-                    transform.position.y + Mathf.Sin(Mathf.Deg2Rad * _angle) * currentEnemySpeed * Time.deltaTime,
-                    transform.position.z);
-                transform.position = newPosition;
+                // If line of sight is true, use _direction for movement. Otherwise, use the fixed angle.
+                if (_hasLineOfSight && _player != null)
+                {
+                    transform.Translate(_direction * currentEnemySpeed * Time.deltaTime);
+                }
+                else
+                {
+                    newPosition = new Vector3(
+                        transform.position.x + Mathf.Cos(Mathf.Deg2Rad * _angle) * currentEnemySpeed * Time.deltaTime,
+                        transform.position.y + Mathf.Sin(Mathf.Deg2Rad * _angle) * currentEnemySpeed * Time.deltaTime,
+                        transform.position.z);
+                    transform.position = newPosition;
+                }
                 break;
             case MovementType.Circle:
                 if (_hasReachedCircleStartPosition)
@@ -210,6 +235,26 @@ public class Enemy : MonoBehaviour
                 throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
         }
 
+
+        // Check if the enemy is originally an Angle enemy
+        if (_isOriginallyAngle)
+        {
+            // Checks if enemy has gone off-screen, enable shield.
+            if (transform.position.y <= -6.5f)
+            {
+                _isShieldActive = true;
+                _shieldVisualizer.SetActive(true);
+            }
+        }
+        else
+        {
+            // Check if the enemy has passed the Y-axis threshold, revert back to StraightDown
+            if (transform.position.y <= -6.5f)
+            {
+                _movementType = MovementType.StraightDown;
+            }
+        }
+        
         // if enemy object is at the bottom of screen
         // respawn at top with a random X-Axis position
         if (transform.position.y <= -10.5f)
@@ -459,6 +504,42 @@ public class Enemy : MonoBehaviour
     }
     
 
-    
+        private void CheckLineOfSight()
+        {
+            // Get the position of the enemy
+            Vector3 enemyPos = transform.position;
+
+            // Cast rays diagonally down to the left and right | X-Axis widens the raycast
+            Vector3[] directions = { new Vector3(-0.75f, -1, 0).normalized, new Vector3(0.75f, -1, 0).normalized };
+
+            // Create a layer mask for the player layer (assuming the player is on layer 0)
+            int playerLayerMask = 1 << 9;
+
+            // Initialize line of sight flag to false
+            _hasLineOfSight = false;
+            
+            // The distance to cast the rays
+            float raycastDistance = 2.5f;
+
+            foreach (var direction in directions)
+            {
+                // Cast a ray from the enemy towards the player
+                RaycastHit2D hit = Physics2D.Raycast(enemyPos, direction, raycastDistance, playerLayerMask);
+                
+                // Draw the ray in the Scene view (for debug purposes only)
+                Debug.DrawRay(enemyPos, direction * raycastDistance, Color.red);
+
+                
+                // If the raycast hits the player
+                if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") && !_player.IsShieldActive())
+                {
+                    // Set the line of sight flag to true
+                    _hasLineOfSight = true;
+                    break;
+                }
+            }
+        }
+
+
 
 }

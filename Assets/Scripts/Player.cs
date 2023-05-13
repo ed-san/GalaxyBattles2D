@@ -552,4 +552,9 @@ public class Player : MonoBehaviour
        _boostedThrusterActive = true;
    }
    
+   public bool IsShieldActive()
+   {
+       return _isShieldActive;
+   }
+   
 }

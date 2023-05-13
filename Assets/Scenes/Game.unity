@@ -2245,7 +2245,7 @@ GameObject:
   - component: {fileID: 1360997977}
   - component: {fileID: 1360997978}
   - component: {fileID: 1360997979}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2376,7 +2376,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.013933659, y: -0.11146927}
+  m_Offset: {x: 0.01944673, y: -0.11146927}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2387,7 +2387,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.3054066, y: 4.172513}
+  m_Size: {x: 3.1065347, y: 4.172513}
   m_EdgeRadius: 0
 --- !u!95 &1360997976
 Animator:
@@ -3374,6 +3374,7 @@ GameObject:
   - component: {fileID: 2069453737}
   - component: {fileID: 2069453736}
   - component: {fileID: 2069453738}
+  - component: {fileID: 2069453739}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Shield
@@ -3468,6 +3469,22 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!58 &2069453739
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2069453735}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.011128545, y: 0.16692913}
+  serializedVersion: 2
+  m_Radius: 1.4916533
 --- !u!1 &2147159650
 GameObject:
   m_ObjectHideFlags: 0
