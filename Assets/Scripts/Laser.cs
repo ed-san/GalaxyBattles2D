@@ -8,64 +8,57 @@ public class Laser : MonoBehaviour
 {
     [SerializeField]
     private float _projectileSpeed = 10.0f;
-
     private bool _isEnemyLaser = false;
     // Add reference to CameraShake script
     private CameraShake _cameraShake;
     [SerializeField]
     private float _cameraShakeStrength = 5.0f;
+    // Add a new field to store the direction in which the laser should move
+    private Vector3 _direction;
+    
 
     // Initialize _cameraShake reference in Start() method
     private void Start()
     {
         _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
+        
+        // Initialize direction based on whether this is an enemy laser or not
+        if (_isEnemyLaser)
+        {
+            _direction = Vector3.down;
+        }
+        else
+        {
+            _direction = Vector3.up;
+        }
     }
     
     void Update()
     {
-        
-        if (_isEnemyLaser == false)
-        {
-            MoveUp();
-        }
-        else
-        {
-            MoveDown();
-        }
-        
-    }
-
-    void MoveUp()
-    {
-        transform.Translate(Time.deltaTime * _projectileSpeed * Vector3.up );
-        
-        // if Y-Axis position is greater than 9.5, destroy laser object
-        if (transform.position.y > 9.5f)
-        {
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
-
-            Destroy(this.gameObject);
-        }
+        // Move in the direction specified by _direction
+        Move();
     }
     
-    void MoveDown()
+    public void AssignDirection(Vector3 direction)
     {
-        transform.Translate(Time.deltaTime * _projectileSpeed * Vector3.down );
+        _direction = direction;
+        // Update the rotation of the laser object
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90;  // Subtract 90 to orient the laser sprite correctly
+        transform. rotation = Quaternion.Euler(0, 0, angle);
+    }
+    
+    
+    void Move()
+    {
+        transform.Translate(Time.deltaTime * _projectileSpeed * _direction);
 
-        // if Y-Axis position is greater than -9.5, destroy laser object
-        if (transform.position.y < -9.5f)
+        // Check if the laser is out of bounds and, if so, destroy it
+        if (transform.position.y > 9.5f || transform.position.y < -9.5f)
         {
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
-
-            Destroy(this.gameObject);
+            DestroySelfAndParent();
         }
         
+
         // if gameObject is a laser from AoeEnemy and X-Axis position is less than -13.5 or greater than 13.5, destroy laser object
         if (gameObject.CompareTag("AoeLaser"))
         {
@@ -84,6 +77,16 @@ public class Laser : MonoBehaviour
             }
         }
         
+    }
+
+    void DestroySelfAndParent()
+    {
+        if (transform.parent != null)
+        {
+            Destroy(transform.parent.gameObject);
+        }
+
+        Destroy(gameObject);
     }
 
 

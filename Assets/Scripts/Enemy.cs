@@ -33,11 +33,12 @@ public class Enemy : MonoBehaviour
     private bool _isShieldActive = false;
     [SerializeField]
     private GameObject _shieldVisualizer;
-    private bool _hasLineOfSight = false;
+    private bool _hasFrontalLineOfSight = false;
+    private bool _hasRearLineOfSight = false;
     private Vector3 _direction = Vector3.zero;
     private bool _isOriginallyAngle = false;
-    
-    
+    private float _rotationSpeed = 180f;  // 180 degrees per second
+    private float _pauseDuration = 1.5f;  // 1.5 seconds
 
 
 
@@ -86,83 +87,105 @@ public class Enemy : MonoBehaviour
         Circle
     }
 
-    void Update()
-    {
-        
-            if (!_isStopped)
-            {
-                CalculateMovement();
-                CheckLineOfSight();
+     void Update()
+     {
+         
+             if (!_isStopped)
+             {
+                 CalculateMovement();
+                 CheckFrontalLineOfSight();
+                 CheckRearLineOfSight();
+ 
+                 if (_hasRearLineOfSight)
+                 {
+                     StartCoroutine(CounterAttack());
+                 }
+                 
+ 
+                 // Check if the enemy has entered the visible area
+                 if (transform.position.y <= 5.5f)
+                 {
+                     _hasEnteredView = true;
+                 }
+ 
+                 // Check if the enemy has reached the start position for the "Circle" movement type
+                 if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
+                 {
+                     _hasReachedCircleStartPosition = true;
+                     _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
+                 }
+ 
+ 
+                 if (_hasFrontalLineOfSight == true && _movementType == MovementType.StraightDown)
+                 {
+                     Debug.Log("Player is within view");
+                     _movementType = MovementType.Angle;
+                     
+                         if (_player != null)
+                         {
+                             if (_player.transform.position.x > transform.position.x)
+                             {
+                                 // Player is to the right of the enemy. Move diagonally down-right.
+                                 _direction = new Vector3(1, -1, 0).normalized;
+                             }
+                             else
+                             {
+                                 // Player is to the left of the enemy. Move diagonally down-left.
+                                 _direction = new Vector3(-1, -1, 0).normalized;
+                             }
+                         }
+                 }
+                 
+ 
+             }
+             
+             float targetY = 0.0f;
+             float threshold = 0.1f;
+             if (Mathf.Abs(transform.position.y - targetY) < threshold && gameObject.CompareTag("AoeEnemy"))
+             {
+                 StartCoroutine(StopMovementForSeconds(_stoppedMovementTime));
+             }
+             
+             // Check if the enemy has a clear line of sight to the player before firing
+             if (!_isDestroyed && Time.time > _canFire)
+             {
+                 SetFireRateForMovementType();
+                 _canFire = Time.time + _fireRate;
+                 
+                 // Instantiate the laser
+                 GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+                 enemyLaser.layer = LayerMask.NameToLayer("Enemy Laser"); // Set the instantiated laser's layer to "Enemy Laser"
+                 Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
 
-                // Check if the enemy has entered the visible area
-                if (transform.position.y <= 5.5f)
-                {
-                    _hasEnteredView = true;
-                }
-
-                // Check if the enemy has reached the start position for the "Circle" movement type
-                if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
-                {
-                    _hasReachedCircleStartPosition = true;
-                    _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
-                }
-
-
-                if (_hasLineOfSight == true && _movementType == MovementType.StraightDown)
-                {
-                    Debug.Log("Player is within view");
-                    _movementType = MovementType.Angle;
-                    
-                        if (_player != null)
-                        {
-                            if (_player.transform.position.x > transform.position.x)
-                            {
-                                // Player is to the right of the enemy. Move diagonally down-right.
-                                _direction = new Vector3(1, -1, 0).normalized;
-                            }
-                            else
-                            {
-                                // Player is to the left of the enemy. Move diagonally down-left.
-                                _direction = new Vector3(-1, -1, 0).normalized;
-                            }
-                        }
-                }
-                
-
-            }
+                 foreach (Laser laser in lasers)
+                 {
+                     laser.AssignEnemyLaser();
+                     if (gameObject.CompareTag("Enemy")) // For RegularEnemy
+                     {
+                         if (_hasRearLineOfSight)
+                         {
+                             // If the player is detected behind, let's set the direction towards the player.
+                             laser.AssignDirection(_direction = Vector3.down);
+                         }
+                         else
+                         {
+                             // If the player is not detected behind, let's set the direction to downward.
+                             laser.AssignDirection(Vector3.up);
+                         }
+                     }
+                     else if (gameObject.CompareTag("AoeEnemy")) // For AoeEnemy
+                     {
+                         // Update _canFire value when the enemy is stopped and is an AoeEnemy
+                         if (_isStopped && gameObject.CompareTag("AoeEnemy"))
+                         {
+                             _canFire = Time.time;
+                         }
+                     }
+                 }
+             }
+             
             
-            float targetY = 0.0f;
-            float threshold = 0.1f;
-            if (Mathf.Abs(transform.position.y - targetY) < threshold && gameObject.CompareTag("AoeEnemy"))
-            {
-                StartCoroutine(StopMovementForSeconds(_stoppedMovementTime));
-            }
-            
-            // Check if the enemy has a clear line of sight to the player before firing
-            if (!_isDestroyed && Time.time > _canFire)
-            {
-                SetFireRateForMovementType();
-                _canFire = Time.time + _fireRate;
-                
-                // Update _canFire value when the enemy is stopped and is an AoeEnemy
-                if (_isStopped && gameObject.CompareTag("AoeEnemy"))
-                {
-                    _canFire = Time.time;
-                }
-
-                GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
-                enemyLaser.layer =
-                    LayerMask.NameToLayer("Enemy Laser"); // Set the instantiated laser's layer to "Enemy Laser"
-                Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-                foreach (Laser laser in lasers)
-                {
-                    laser.AssignEnemyLaser();
-                }
-            }
-            
-           
-    }
+     }
 
     void CalculateMovement()
     {
@@ -191,7 +214,7 @@ public class Enemy : MonoBehaviour
             case MovementType.Angle:
                 // Move at a custom angle (in degrees)
                 // If line of sight is true, use _direction for movement. Otherwise, use the fixed angle.
-                if (_hasLineOfSight && _player != null)
+                if (_hasFrontalLineOfSight && _player != null)
                 {
                     transform.Translate(_direction * currentEnemySpeed * Time.deltaTime);
                 }
@@ -504,7 +527,7 @@ public class Enemy : MonoBehaviour
     }
     
 
-        private void CheckLineOfSight()
+        private void CheckFrontalLineOfSight()
         {
             // Get the position of the enemy
             Vector3 enemyPos = transform.position;
@@ -516,7 +539,7 @@ public class Enemy : MonoBehaviour
             int playerLayerMask = 1 << 9;
 
             // Initialize line of sight flag to false
-            _hasLineOfSight = false;
+            _hasFrontalLineOfSight = false;
             
             // The distance to cast the rays
             float raycastDistance = 2.5f;
@@ -534,11 +557,89 @@ public class Enemy : MonoBehaviour
                 if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") && !_player.IsShieldActive())
                 {
                     // Set the line of sight flag to true
-                    _hasLineOfSight = true;
+                    _hasFrontalLineOfSight = true;
                     break;
                 }
             }
         }
+        
+        private void CheckRearLineOfSight()
+        {
+            // Get the position of the enemy
+            Vector3 enemyPos = transform.position;
+
+            // Cast rays behind the enemy (opposite of the forward direction)
+            Vector3 direction = transform.up;
+
+            // Create a layer mask for the player layer (assuming the player is on layer 9)
+            int playerLayerMask = 1 << 9;
+
+            // Initialize line of sight flag to false
+            _hasRearLineOfSight = false;
+
+            // The distance to cast the rays
+            float raycastDistance = 4.0f;
+
+            // Cast a ray from the enemy towards the player
+            RaycastHit2D hit = Physics2D.Raycast(enemyPos, direction, raycastDistance, playerLayerMask);
+    
+            // Draw the ray in the Scene view (for debug purposes only)
+            Debug.DrawRay(enemyPos, direction * raycastDistance, Color.red);
+
+            // If the raycast hits the player
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Player") && !_player.IsShieldActive())
+            {
+                // Set the line of sight flag to true
+                _hasRearLineOfSight = true;
+            }
+        }
+
+        private IEnumerator CounterAttack()
+        {
+            // First, set the enemy to stop moving by setting a flag, speed to 0, etc.
+            _isStopped = true;
+
+            // Next, calculate the target angle to face upwards
+            float targetAngle = -180;
+
+            // Use a loop to gradually rotate the enemy to face upwards
+            while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle)) > 0.05f)
+                {
+                    // Calculate the new rotation for this frame
+                    float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, _rotationSpeed * Time.deltaTime);
+
+                    // Apply the new rotation
+                    transform.eulerAngles = new Vector3(0, 0, angle);
+
+                    // Wait until next frame
+                    yield return null;
+                }
+            
+                // Pause to allow the laser to be fired before turning back
+                yield return new WaitForSeconds(_pauseDuration);
+
+                // Now, calculate the target angle to face downwards again
+                targetAngle = 0;
+
+            // Use another loop to gradually rotate the enemy to face downwards
+            while (Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, targetAngle)) > 0.05f)
+                {
+                    // Calculate the new rotation for this frame
+                    float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, _rotationSpeed * Time.deltaTime);
+
+                    // Apply the new rotation
+                    transform.eulerAngles = new Vector3(0, 0, angle);
+
+                    // Wait until next frame
+                    yield return null;
+                }
+
+                // Finally, allow the enemy to move again
+                _isStopped = false;
+        }
+        
+     
+
 
 
 
