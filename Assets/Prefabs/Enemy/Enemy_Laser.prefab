@@ -147,7 +147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_SortingOrder
@@ -157,6 +157,18 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -601551789
       objectReference: {fileID: 0}
+    - target: {fileID: 2457680798031200049, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_PlayAutomatically
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457680798031200049, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_Animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457680798031200049, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_Animations.Array.data[0]
+      value: 
+      objectReference: {fileID: 7400000, guid: 6065e5dc80fbadd4cbf1a715082de837, type: 2}
     - target: {fileID: 8724879031524747514, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -225,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_SortingLayer
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1440607182837426385, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_SortingOrder
@@ -235,6 +247,18 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -601551789
       objectReference: {fileID: 0}
+    - target: {fileID: 2457680798031200049, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_PlayAutomatically
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457680798031200049, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_Animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457680798031200049, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
+      propertyPath: m_Animations.Array.data[0]
+      value: 
+      objectReference: {fileID: 7400000, guid: 6065e5dc80fbadd4cbf1a715082de837, type: 2}
     - target: {fileID: 8724879031524747514, guid: bcecc03522e3a5942b9430f3f3d06791, type: 3}
       propertyPath: m_RootOrder
       value: 1

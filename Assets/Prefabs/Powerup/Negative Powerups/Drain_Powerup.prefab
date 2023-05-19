@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 573555859324059697}
   - component: {fileID: 8484499641672697021}
   - component: {fileID: 3294834814172431973}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Drain_Powerup
   m_TagString: Powerups
   m_Icon: {fileID: 0}

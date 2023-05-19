@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1951945705}
   - component: {fileID: 7814002422323463963}
   - component: {fileID: 937449607236696342}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Special_Shot_Powerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}

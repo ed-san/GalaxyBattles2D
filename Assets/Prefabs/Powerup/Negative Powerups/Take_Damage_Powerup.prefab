@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 116386065367581712}
   - component: {fileID: 116386065367581713}
   - component: {fileID: 519834362074000387}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Take_Damage_Powerup
   m_TagString: Powerups
   m_Icon: {fileID: 0}

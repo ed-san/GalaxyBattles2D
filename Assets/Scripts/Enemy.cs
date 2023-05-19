@@ -35,10 +35,12 @@ public class Enemy : MonoBehaviour
     private GameObject _shieldVisualizer;
     private bool _hasFrontalLineOfSight = false;
     private bool _hasRearLineOfSight = false;
+    private bool _hasPowerupLineOfSight = false;
     private Vector3 _direction = Vector3.zero;
     private bool _isOriginallyAngle = false;
     private float _rotationSpeed = 180f;  // 180 degrees per second
     private float _pauseDuration = 1.5f;  // 1.5 seconds
+    
 
 
 
@@ -52,6 +54,7 @@ public class Enemy : MonoBehaviour
         _circleStartY = _circleCenter.y + 2.0f;
         _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
         _angle = Random.Range(0, 2) == 0 ? -45.0f : -135.0f; // Angles pointing downwards
+        
 
         if (_cameraShake == null)
         {
@@ -72,7 +75,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("Enemy prefab doesn't have audio source component!");
         }
-        
+
         // Check the original movement type and set _isOriginallyAngle accordingly
         _isOriginallyAngle = _movementType == MovementType.Angle;
 
@@ -95,14 +98,14 @@ public class Enemy : MonoBehaviour
                  CalculateMovement();
                  CheckFrontalLineOfSight();
                  CheckRearLineOfSight();
+                 CheckPowerUpLineOfSight();
  
-                 if (_hasRearLineOfSight)
+                 if (_hasRearLineOfSight && gameObject.CompareTag("Enemy"))
                  {
                      StartCoroutine(CounterAttack());
                  }
                  
- 
-                 // Check if the enemy has entered the visible area
+                     // Check if the enemy has entered the visible area
                  if (transform.position.y <= 5.5f)
                  {
                      _hasEnteredView = true;
@@ -172,6 +175,12 @@ public class Enemy : MonoBehaviour
                              // If the player is not detected behind, let's set the direction to downward.
                              laser.AssignDirection(Vector3.up);
                          }
+                         
+                         if (_hasPowerupLineOfSight)
+                         {
+                             laser.AssignDirection(Vector3.up);
+                         }
+                         
                      }
                      else if (gameObject.CompareTag("AoeEnemy")) // For AoeEnemy
                      {
@@ -316,6 +325,7 @@ public class Enemy : MonoBehaviour
             _audioSource[0].Play();
             Destroy(this.gameObject, 2.2f);
         }
+        
 
         if (other.CompareTag("Laser"))
         {
@@ -591,6 +601,38 @@ public class Enemy : MonoBehaviour
             {
                 // Set the line of sight flag to true
                 _hasRearLineOfSight = true;
+            }
+        }
+
+        private void CheckPowerUpLineOfSight()
+        {
+            // Get the position of the enemy
+            Vector3 enemyPos = transform.position;
+
+            // Cast rays infront the enemy
+            Vector3 direction = -transform.up;
+
+            // Create a layer mask for the powerup layer (assuming the powerup is on layer 9)
+            int playerLayerMask = 1 << 11;
+
+            // Initialize line of sight flag to false
+            _hasPowerupLineOfSight = false;
+
+            // The distance to cast the rays
+            float raycastDistance = 5.25f;
+
+            // Cast a ray from the enemy towards the player
+            RaycastHit2D hit = Physics2D.Raycast(enemyPos, direction, raycastDistance, playerLayerMask);
+    
+            // Draw the ray in the Scene view (for debug purposes only)
+            Debug.DrawRay(enemyPos, direction * raycastDistance, Color.green);
+
+            // If the raycast hits the player
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Powerups") && hit.collider.gameObject.layer == LayerMask.NameToLayer("Positive Powerup"))
+            {
+                // Set the line of sight flag to true
+                _hasPowerupLineOfSight = true;
+                Debug.Log("Powerup has been detected!");
             }
         }
 

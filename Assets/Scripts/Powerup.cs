@@ -14,7 +14,34 @@ public class Powerup : MonoBehaviour
     private int _powerupID;
     [SerializeField]
     private AudioClip _powerUpClip;
+    private Animator _anim;
+    [SerializeField] 
+    private AudioSource[] _audioSource;
     
+    private string[] _powerupNames = new string[] {"TripleShot", "Speed", "Shield", "Ammo", "Heal"};
+
+    private void Start()
+    {
+        _audioSource = GetComponents<AudioSource>();
+        _anim = GetComponent<Animator>();
+
+        if (_anim == null)
+        {
+            Debug.LogError("Animator component is NULL!");
+        }
+        else
+        {
+            if (_powerupID < 5) // Update this line
+            {
+                _anim.SetTrigger("Play" + _powerupNames[_powerupID] + "Powerup");
+            }
+        }
+        
+        if (_audioSource == null)
+        {
+            Debug.LogError("Enemy prefab doesn't have audio source component!");
+        }
+    }
 
     void Update()
     {
@@ -70,6 +97,25 @@ public class Powerup : MonoBehaviour
 
             Destroy(this.gameObject);
         }
+        
+        if (other.CompareTag("Laser") && gameObject.layer == LayerMask.NameToLayer("Positive Powerup"))
+        {
+            //This if-statement cleans up the Laser object
+            if (other != null)
+            {
+                Debug.Log("Has Entered the Powerups Collision Block!");
+                Destroy(GetComponent<Collider2D>());
+                Destroy(other.gameObject);
+            }
+            
+            //This code destroys the powerup object after colliding with the laser.
+            _anim.SetTrigger("DestroyPowerup");
+            _powerUpSpeed = 0;
+            _audioSource[0].Play();
+            Destroy(this.gameObject, 2.2f);
+
+        }
+        
     }
     void PowerupMovement()
     {

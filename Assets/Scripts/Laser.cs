@@ -15,13 +15,13 @@ public class Laser : MonoBehaviour
     private float _cameraShakeStrength = 5.0f;
     // Add a new field to store the direction in which the laser should move
     private Vector3 _direction;
-    
+
 
     // Initialize _cameraShake reference in Start() method
     private void Start()
     {
         _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
-        
+
         // Initialize direction based on whether this is an enemy laser or not
         if (_isEnemyLaser)
         {
@@ -126,6 +126,7 @@ public class Laser : MonoBehaviour
                player.Damage(1); 
             }
         }
+        
     }
 
     public float GetProjectileSpeed()

@@ -147,3 +147,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileSpeed: 10
+  _cameraShakeStrength: 5
+  _anim: {fileID: 0}
