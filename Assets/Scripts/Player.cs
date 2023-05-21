@@ -118,6 +118,16 @@ public class Player : MonoBehaviour
             _rightEngineVisualizer.SetActive(true);
             _leftEngineVisualizer.SetActive(false);
         }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            AttractPowerups();
+        }
+        
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            StopAttractingPowerups();
+        }
         
     }
 
@@ -556,5 +566,41 @@ public class Player : MonoBehaviour
    {
        return _isShieldActive;
    }
+
+   void AttractPowerups()
+   {
+       // Define the target layer
+       int targetLayer = LayerMask.NameToLayer("Positive Powerup");
+
+        // Get all GameObjects in the scene
+       GameObject[] allObjects = GameObject.FindObjectsOfType<GameObject>();
+
+       // Create a list to store the Powerup components
+       List<Powerup> powerups = new List<Powerup>();
+
+        // Loop over all GameObjects
+       foreach (GameObject obj in allObjects)
+       {
+           // If the object is on the target layer and has a Powerup component, add it to the list
+           if (obj.layer == targetLayer && obj.GetComponent<Powerup>() != null)
+           {
+               Powerup powerup = obj.GetComponent<Powerup>();
+               powerups.Add(powerup);
+               powerup.SetAttract(true, this.gameObject); // This will attract the powerups to the player
+           }
+       }
+       
+   }
+   
+   void StopAttractingPowerups()
+   {
+       // Get all powerups and call SetAttract(false, null) on each
+       Powerup[] powerups = GameObject.FindObjectsOfType<Powerup>();
+       foreach (Powerup powerup in powerups)
+       {
+           powerup.SetAttract(false, null);
+       }
+   }
+   
    
 }

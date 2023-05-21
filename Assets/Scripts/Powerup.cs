@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Powerup : MonoBehaviour
 {
     [SerializeField]
@@ -17,8 +18,10 @@ public class Powerup : MonoBehaviour
     private Animator _anim;
     [SerializeField] 
     private AudioSource[] _audioSource;
-    
+    public bool attracted = false;
+    private GameObject _player;
     private string[] _powerupNames = new string[] {"TripleShot", "Speed", "Shield", "Ammo", "Heal"};
+    private float attractSpeed = 5.0f;
 
     private void Start()
     {
@@ -45,7 +48,16 @@ public class Powerup : MonoBehaviour
 
     void Update()
     {
-        PowerupMovement();
+        if (attracted && _player != null)
+        {
+            Vector3 directionToPlayer = (_player.transform.position - transform.position).normalized;
+            transform.Translate(directionToPlayer * attractSpeed * Time.deltaTime, Space.World);
+        }
+        else
+        {
+            PowerupMovement();
+        }
+
         if (transform.position.y < -7.0f)
         {
             Destroy(gameObject);
@@ -126,4 +138,11 @@ public class Powerup : MonoBehaviour
     {
         return _powerupID;
     }
+
+    public void SetAttract(bool attract, GameObject player)
+    {
+        attracted = attract;
+        _player = player;
+    }
+    
 }
