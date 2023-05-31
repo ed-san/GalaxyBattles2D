@@ -11,6 +11,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] 
     private GameObject _aoeEnemyPrefab;
     [SerializeField]
+    private GameObject _dodgeEnemyPrefab; // The new DodgeEnemy prefab
+    [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
     private GameObject[] _powerups;
@@ -43,10 +45,11 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawning()
     {
-        StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
-        StartCoroutine(WaveManagement(_wave, _waveDuration));
-        StartCoroutine(SpawnPowerupRoutine());
-        StartCoroutine(SpecialBlastSpawnRoutine(_specialShotSpawnRate));
+        StartCoroutine(DodgeEnemySpawnRoutine(5.0f));
+        //StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
+        //StartCoroutine(WaveManagement(_wave, _waveDuration));
+        //StartCoroutine(SpawnPowerupRoutine());
+        //StartCoroutine(SpecialBlastSpawnRoutine(_specialShotSpawnRate));
     }
 
     IEnumerator WaveManagement(int _wave, float _waveDuration)
@@ -217,6 +220,28 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitForSeconds(30.0f);
         }
         
+    }
+    
+    
+    // Coroutine to spawn DodgeEnemy
+    private IEnumerator DodgeEnemySpawnRoutine(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        
+        while (_stopSpawning == false) 
+        { 
+            Vector3 spawnPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
+            GameObject dodgeEnemy = Instantiate(_dodgeEnemyPrefab, spawnPosition, Quaternion.identity);
+            dodgeEnemy.transform.parent = _enemyContainer.transform;
+            
+            Enemy dodgeEnemyScript = dodgeEnemy.GetComponent<Enemy>();
+            if (dodgeEnemyScript != null)
+            {
+                dodgeEnemyScript.SetMovementType(Enemy.MovementType.StraightDown); // Set the desired movement type
+            }
+            
+            yield return new WaitForSeconds(waitTime);
+        }
     }
     
     public int GetWave

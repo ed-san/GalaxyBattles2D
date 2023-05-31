@@ -16,6 +16,7 @@ TagManager:
   - AoeEnemy
   - AoeLaser
   - AoeEnemyLaserParent
+  - DodgeEnemy
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - Player
   - Negative Powerup
   - Positive Powerup
-  - 
+  - Player Laser
   - 
   - 
   - 

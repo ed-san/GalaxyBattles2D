@@ -40,6 +40,8 @@ public class Enemy : MonoBehaviour
     private bool _isOriginallyAngle = false;
     private float _rotationSpeed = 180f;  // 180 degrees per second
     private float _pauseDuration = 1.5f;  // 1.5 seconds
+    [SerializeField] private float dodgeSpeed = 25f;
+    [SerializeField] private float dodgeDistance = 100.0f;
     
 
 
@@ -90,113 +92,130 @@ public class Enemy : MonoBehaviour
         Circle
     }
 
-     void Update()
-     {
-         
-             if (!_isStopped)
+         void Update()
+         {
+             
+             if(_isDestroyed)
              {
-                 CalculateMovement();
-                 CheckFrontalLineOfSight();
-                 CheckRearLineOfSight();
-                 CheckPowerUpLineOfSight();
- 
-                 if (_hasRearLineOfSight && gameObject.CompareTag("Enemy"))
+                 return;
+             }
+             
+                 if (!_isStopped)
                  {
-                     StartCoroutine(CounterAttack());
-                 }
-                 
-                     // Check if the enemy has entered the visible area
-                 if (transform.position.y <= 5.5f)
-                 {
-                     _hasEnteredView = true;
-                 }
- 
-                 // Check if the enemy has reached the start position for the "Circle" movement type
-                 if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
-                 {
-                     _hasReachedCircleStartPosition = true;
-                     _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
-                 }
- 
- 
-                 if (_hasFrontalLineOfSight == true && _movementType == MovementType.StraightDown)
-                 {
-                     Debug.Log("Player is within view");
-                     _movementType = MovementType.Angle;
+                     CalculateMovement();
+                     CheckFrontalLineOfSight();
+                     CheckRearLineOfSight();
+                     CheckPowerUpLineOfSight();
+                     // Detect and dodge player's laser
+                     DetectLaserAndDodge();
+     
+                     if (_hasRearLineOfSight && gameObject.CompareTag("Enemy"))
+                     {
+                         StartCoroutine(CounterAttack());
+                     }
                      
-                         if (_player != null)
-                         {
-                             if (_player.transform.position.x > transform.position.x)
+                         // Check if the enemy has entered the visible area
+                     if (transform.position.y <= 5.5f)
+                     {
+                         _hasEnteredView = true;
+                     }
+     
+                     // Check if the enemy has reached the start position for the "Circle" movement type
+                     if (transform.position.y <= _circleStartY && !_hasReachedCircleStartPosition)
+                     {
+                         _hasReachedCircleStartPosition = true;
+                         _circleCenter = new Vector3(transform.position.x, _circleStartY - _circleRadius, transform.position.z);
+                     }
+     
+     
+                     if (_hasFrontalLineOfSight == true && _movementType == MovementType.StraightDown)
+                     {
+                         Debug.Log("Player is within view");
+                         _movementType = MovementType.Angle;
+                         
+                             if (_player != null)
                              {
-                                 // Player is to the right of the enemy. Move diagonally down-right.
-                                 _direction = new Vector3(1, -1, 0).normalized;
+                                 if (_player.transform.position.x > transform.position.x)
+                                 {
+                                     // Player is to the right of the enemy. Move diagonally down-right.
+                                     _direction = new Vector3(1, -1, 0).normalized;
+                                 }
+                                 else
+                                 {
+                                     // Player is to the left of the enemy. Move diagonally down-left.
+                                     _direction = new Vector3(-1, -1, 0).normalized;
+                                 }
                              }
-                             else
-                             {
-                                 // Player is to the left of the enemy. Move diagonally down-left.
-                                 _direction = new Vector3(-1, -1, 0).normalized;
-                             }
-                         }
+                     }
+                     
+     
                  }
                  
- 
-             }
-             
-             float targetY = 0.0f;
-             float threshold = 0.1f;
-             if (Mathf.Abs(transform.position.y - targetY) < threshold && gameObject.CompareTag("AoeEnemy"))
-             {
-                 StartCoroutine(StopMovementForSeconds(_stoppedMovementTime));
-             }
-             
-             // Check if the enemy has a clear line of sight to the player before firing
-             if (!_isDestroyed && Time.time > _canFire)
-             {
-                 SetFireRateForMovementType();
-                 _canFire = Time.time + _fireRate;
-                 
-                 // Instantiate the laser
-                 GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
-                 enemyLaser.layer = LayerMask.NameToLayer("Enemy Laser"); // Set the instantiated laser's layer to "Enemy Laser"
-                 Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-                 foreach (Laser laser in lasers)
+                 float targetY = 0.0f;
+                 float threshold = 0.1f;
+                 if (Mathf.Abs(transform.position.y - targetY) < threshold && gameObject.CompareTag("AoeEnemy"))
                  {
-                     laser.AssignEnemyLaser();
-                     if (gameObject.CompareTag("Enemy")) // For RegularEnemy
-                     {
-                         if (_hasRearLineOfSight)
-                         {
-                             // If the player is detected behind, let's set the direction towards the player.
-                             laser.AssignDirection(_direction = Vector3.down);
-                         }
-                         else
-                         {
-                             // If the player is not detected behind, let's set the direction to downward.
-                             laser.AssignDirection(Vector3.up);
-                         }
+                     StartCoroutine(StopMovementForSeconds(_stoppedMovementTime));
+                 }
+                 
+                 // Check if the enemy has a clear line of sight to the player before firing
+                 if (!_isDestroyed && Time.time > _canFire)
+                 {
+                     SetFireRateForMovementType();
+                     _canFire = Time.time + _fireRate;
+                     
+                     // Wait for a short delay before firing the laser
+                     StartCoroutine(DelayedFireLaser());
+        
+                 }
+                 
+                
+         }
+     
+     
+     private IEnumerator DelayedFireLaser()
+     {
+         yield return new WaitForSeconds(0.1f);  // Delay can be adjusted based on your needs
+         
+         // Instantiate the laser
+         GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+         enemyLaser.layer = LayerMask.NameToLayer("Enemy Laser"); // Set the instantiated laser's layer to "Enemy Laser"
+         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+         foreach (Laser laser in lasers)
+         {
+             laser.AssignEnemyLaser();
+             if (gameObject.CompareTag("Enemy")) // For RegularEnemy
+             {
+                 if (_hasRearLineOfSight)
+                 {
+                     // If the player is detected behind, let's set the direction towards the player.
+                     laser.AssignDirection(_direction = Vector3.down);
+                 }
+                 else
+                 {
+                     // If the player is not detected behind, let's set the direction to downward.
+                     laser.AssignDirection(Vector3.up);
+                 }
                          
-                         if (_hasPowerupLineOfSight)
-                         {
-                             laser.AssignDirection(Vector3.up);
-                         }
+                 if (_hasPowerupLineOfSight)
+                 {
+                     laser.AssignDirection(Vector3.up);
+                 }
                          
-                     }
-                     else if (gameObject.CompareTag("AoeEnemy")) // For AoeEnemy
-                     {
-                         // Update _canFire value when the enemy is stopped and is an AoeEnemy
-                         if (_isStopped && gameObject.CompareTag("AoeEnemy"))
-                         {
-                             _canFire = Time.time;
-                         }
-                     }
+             }
+             else if (gameObject.CompareTag("AoeEnemy")) // For AoeEnemy
+             {
+                 // Update _canFire value when the enemy is stopped and is an AoeEnemy
+                 if (_isStopped && gameObject.CompareTag("AoeEnemy"))
+                 {
+                     _canFire = Time.time;
                  }
              }
-             
-            
+         }
      }
 
-    void CalculateMovement()
+     void CalculateMovement()
     {
         float currentEnemySpeed = _enemySpeed;
 
@@ -304,9 +323,13 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if(_isDestroyed)
+        {
+            return;
+        }
 
         // Handles enemy collisions so that they don't destroy each other with their more dynamic movements.
-        if (other.CompareTag("Enemy") || other.CompareTag("AoeEnemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("AoeEnemy") || other.CompareTag("DodgeEnemy"))
         {
             StartCoroutine(PauseAndChangeMovement());
         }
@@ -319,16 +342,47 @@ public class Enemy : MonoBehaviour
                 _cameraShake.Shake(_cameraShakeStrength);
                 _isDestroyed = true;
             }
+            
+            if (gameObject.CompareTag("AoeEnemy"))
+            {
+                //Destroy(other.gameObject);
+                _isDestroyed = true;
 
-            _anim.SetTrigger("OnEnemyDeath");
-            _enemySpeed = 0;
-            _audioSource[0].Play();
-            Destroy(this.gameObject, 2.2f);
+                _anim.SetTrigger("OnAoeEnemyDeath");
+                _enemySpeed = 0;
+                _audioSource[0].Play();
+
+                Destroy(GetComponent<Collider2D>());
+                Destroy(this.gameObject, 2.2f);
+            }
+            else if (gameObject.CompareTag("DodgeEnemy"))
+            {
+                //Destroy(other.gameObject);
+                _isDestroyed = true;
+
+                _anim.SetTrigger("OnDodgeEnemyDeath");
+                _enemySpeed = 0;
+                _audioSource[0].Play();
+
+                Destroy(GetComponent<Collider2D>());
+                Destroy(this.gameObject, 2.2f);
+            }
+            else
+            {
+                _anim.SetTrigger("OnEnemyDeath");
+                _enemySpeed = 0;
+                _audioSource[0].Play();
+                Destroy(this.gameObject, 2.2f); 
+            }
+
+         
         }
         
 
         if (other.CompareTag("Laser"))
         {
+            Destroy(other.gameObject);
+            
             if (_isShieldActive)
             {
                 _audioSource[2].Play();
@@ -339,7 +393,7 @@ public class Enemy : MonoBehaviour
 
             if (gameObject.CompareTag("AoeEnemy"))
                 {
-                    Destroy(other.gameObject);
+                    //Destroy(other.gameObject);
                     _isDestroyed = true;
 
                     _anim.SetTrigger("OnAoeEnemyDeath");
@@ -349,9 +403,20 @@ public class Enemy : MonoBehaviour
                     Destroy(GetComponent<Collider2D>());
                     Destroy(this.gameObject, 2.2f);
                 }
+                else if (gameObject.CompareTag("DodgeEnemy"))
+                {
+                    _isDestroyed = true;
+
+                    _anim.Play("Dodge_Enemy_Destroyed_anim");
+                    _enemySpeed = 0;
+                    _audioSource[0].Play();
+
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(this.gameObject, 2.2f);
+                }
                 else
                 {
-                    Destroy(other.gameObject);
+                    //Destroy(other.gameObject);
                     _isDestroyed = true;
 
                     _anim.SetTrigger("OnEnemyDeath");
@@ -396,6 +461,8 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("SpecialShot"))
         {
+            Destroy(other.gameObject);
+            
             if (_isShieldActive)
             {
                 _audioSource[2].Play();
@@ -678,6 +745,106 @@ public class Enemy : MonoBehaviour
 
                 // Finally, allow the enemy to move again
                 _isStopped = false;
+        }
+        
+       /* private void DetectLaserAndDodge()
+        {
+            // Set the detection range
+            float detectionRange = 8.0f;
+
+            // Cast a ray to the right and left
+            RaycastHit2D hitInfoRight = Physics2D.Raycast(transform.position, Vector2.right, detectionRange, LayerMask.GetMask("Player Laser"));
+            RaycastHit2D hitInfoLeft = Physics2D.Raycast(transform.position, Vector2.left, detectionRange, LayerMask.GetMask("Player Laser"));
+
+            // Debug lines
+            Debug.DrawRay(transform.position, Vector2.right * detectionRange, Color.yellow);
+            Debug.DrawRay(transform.position, Vector2.left * detectionRange, Color.yellow);
+
+            // Get the animator component
+            Animator animator = GetComponent<Animator>();
+
+            // Check if the right ray hit a laser
+            if (hitInfoRight.collider != null)
+            {
+                // Laser detected on the right side, dodge to the left
+                Dodge(-dodgeDistance);  // Move to the left
+                animator.SetTrigger("LeftDodge");  // Trigger the LeftDodge animation
+            }
+            // Check if the left ray hit a laser
+            else if (hitInfoLeft.collider != null)
+            {
+                // Laser detected on the left side, dodge to the right
+                Dodge(dodgeDistance);  // Move to the right
+                animator.SetTrigger("RightDodge");  // Trigger the RightDodge animation
+            }
+        }
+        
+        */
+       private void DetectLaserAndDodge()
+       {
+           // Set the detection range and the number of rays
+           float detectionRange = 10.0f;
+           int numOfRays = 30;
+
+           // Get the animator component
+           Animator animator = GetComponent<Animator>();
+
+           bool shouldDodge = false;
+
+           for (int i = 0; i < numOfRays; i++)
+           {
+               // Calculate the ray's direction
+               float angle = 270f - 15f + (30f / (numOfRays - 1)) * i; // Adjusting the starting angle
+               Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+
+               // Cast the ray
+               RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, direction, detectionRange, LayerMask.GetMask("Player Laser"));
+
+               // Debug line
+               Debug.DrawRay(transform.position, direction * detectionRange, Color.yellow);
+
+               // Check if the ray hit a laser
+               if (hitInfo.collider != null)
+               {
+                   shouldDodge = true;
+
+                   if (hitInfo.collider.gameObject.CompareTag("Player"))
+                   {
+                       // if it's the player, don't dodge
+                       animator.ResetTrigger("LeftDodge");
+                       animator.ResetTrigger("RightDodge");
+                   }
+                   else if (hitInfo.point.x < transform.position.x)
+                   {
+                       // Laser detected on the left side, dodge to the right
+                       Dodge(dodgeDistance);  // Move to the right
+                       animator.SetTrigger("RightDodge");  // Trigger the RightDodge animation
+                   }
+                   else
+                   {
+                       // Laser detected on the right side, dodge to the left
+                       Dodge(-dodgeDistance);  // Move to the left
+                       animator.SetTrigger("LeftDodge");  // Trigger the LeftDodge animation
+                   }
+                   break;
+               }
+           }
+
+           if (!shouldDodge)
+           {
+               animator.ResetTrigger("LeftDodge");
+               animator.ResetTrigger("RightDodge");
+           }
+       }
+
+        private void Dodge(float distance)
+        {
+            // Calculate the dodge direction and target position
+            Vector3 direction = (distance > 0) ? Vector3.right : Vector3.left;
+            Vector3 targetPosition = transform.position + direction * Mathf.Abs(distance);
+
+            // Move towards the target position
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, dodgeSpeed * Time.deltaTime);
         }
         
      

@@ -1,0 +1,1095 @@
+fileFormatVersion: 2
+guid: 767f46cb481d56643b1c298c5657e67e
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMasterTextureLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 37
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1872
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52a5cc1a49ee3a2468693da5a80d3abc
+      internalID: 1475324417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_1
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 1872
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fafd47e0aeaff7647944a3ff46263a9b
+      internalID: 1535468574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_2
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 1872
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b25f3932e9f3224d898c3de3d2323cd
+      internalID: -799322645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_3
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 1872
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f67b09dbc26953a4b8df82687b20ce3f
+      internalID: 1000954271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_4
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 1872
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5032722f571d5e4fbd1a3ff528f737c
+      internalID: -1613276777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_5
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 1872
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 363bdb452e82f0647ad5627b00d4b765
+      internalID: 614478670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1560
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02afd975bb703d742855b67b62930c7e
+      internalID: 478896415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_7
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 1560
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d229c79e62c540b439178f8029357cb8
+      internalID: 2041344482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_8
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 1560
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34b3f85ab11c15d4390758504ad8c08b
+      internalID: 254762487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_9
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 1560
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a5f98b478afd63459bc2dbbcfcd44c4
+      internalID: 784069666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_10
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 1560
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03e34636333867f4e98e3846d9133bab
+      internalID: 1437575224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_11
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 1560
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ab350c87aec43c4d9209ada2e0340be
+      internalID: 1679124460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1248
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b535176270438a14fb356932fa9ca66b
+      internalID: 744707828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_13
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 1248
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e75a9e61fb020bc4b992d6ef536e322c
+      internalID: 486281651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_14
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 1248
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f436aeb5cafa0c14a94a74b44d79bbff
+      internalID: 1348582001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_15
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 1248
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08c8a0814902edc40a48cc8c1e1b1269
+      internalID: 1598973621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_16
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 1248
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9da21853beaae6246a145cf0704a703b
+      internalID: -1623001737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_17
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 1248
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d741c8ee1dd8dcc46b8c125b051f1902
+      internalID: -628337386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 936
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 758b53b951cf33946a24b24d75922a15
+      internalID: -646457065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_19
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 936
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d34581aff07ec1e4eb44d23fc7400daf
+      internalID: -694124836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_20
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 936
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4212c84a7eec2a498238d6f5e331716
+      internalID: 1195225588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_21
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 936
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afd5a469398acb641b20dd34f9ccd700
+      internalID: -1239683469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_22
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 936
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f81fee09b48cab24c8ad1a32265102f6
+      internalID: -1844994954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_23
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 936
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 931206db0a813f744b2e0888752be808
+      internalID: 784156774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 624
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 078f058a24ae90344adcf082ee5aeffb
+      internalID: -515982856
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_25
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 624
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ac607d5e82d928428d007011ee5fbba
+      internalID: 1390411562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_26
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 624
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5439df04f0bd34419908124d41297e3
+      internalID: 976623787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_27
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 624
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 681c87704c228ed47886a3ede248d6b4
+      internalID: 1410581743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_28
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 624
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46163e1f19108834e8ea40427cc7babc
+      internalID: 1360606916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_29
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 624
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b67f7531c03db624fa788128d83fba52
+      internalID: -2099046651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_30
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 312
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c283c0644e817834293585dc207b818c
+      internalID: 1774417504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_31
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 312
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1cc0ca0e88586714aa8d93f1a3aa72ce
+      internalID: 1054233493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_32
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 312
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b88446e2ebd3654ab6d3a1190286deb
+      internalID: 1372436013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_33
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 312
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9463c985ce5d6e2439d341b1ca871fcf
+      internalID: 1064152498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_34
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 312
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6cc5e8ef4b0d57c479fd092f5670d3a8
+      internalID: 400681028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_35
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 312
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 607967b77b684fe4691ab725be0de76a
+      internalID: 1199967868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_36
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a8eb7683df7e08f4ebf3e9b519b5df6c
+      internalID: -935209608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_37
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 0
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff5e4ff433ea03147acb5a533942f0de
+      internalID: -1034053720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_38
+      rect:
+        serializedVersion: 2
+        x: 1368
+        y: 0
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd70d91b5e8e01142b0380e630f0bc2c
+      internalID: -119825761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_39
+      rect:
+        serializedVersion: 2
+        x: 2052
+        y: 0
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 59b0d3385598a494f96942357c2889c1
+      internalID: 1834953896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_40
+      rect:
+        serializedVersion: 2
+        x: 2736
+        y: 0
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03c4174eaef2afc4e8fe6de17fc2d83b
+      internalID: 984155739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Right_Move_Spritesheet_v2_41
+      rect:
+        serializedVersion: 2
+        x: 3420
+        y: 0
+        width: 684
+        height: 312
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d96c8e2d849ba34c88c554e08c4a146
+      internalID: 1227717849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: b8b8da7eb9714644c805129740863399
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Right_Move_Spritesheet_v2_10: 1437575224
+      Right_Move_Spritesheet_v2_11: 1679124460
+      Right_Move_Spritesheet_v2_14: 1348582001
+      Right_Move_Spritesheet_v2_18: -646457065
+      Right_Move_Spritesheet_v2_6: 478896415
+      Right_Move_Spritesheet_v2_23: 784156774
+      Right_Move_Spritesheet_v2_36: -935209608
+      Right_Move_Spritesheet_v2_28: 1360606916
+      Right_Move_Spritesheet_v2_13: 486281651
+      Right_Move_Spritesheet_v2_7: 2041344482
+      Right_Move_Spritesheet_v2_20: 1195225588
+      Right_Move_Spritesheet_v2_8: 254762487
+      Right_Move_Spritesheet_v2_15: 1598973621
+      Right_Move_Spritesheet_v2_4: -1613276777
+      Right_Move_Spritesheet_v2_24: -515982856
+      Right_Move_Spritesheet_v2_25: 1390411562
+      Right_Move_Spritesheet_v2_0: 1475324417
+      Right_Move_Spritesheet_v2_1: 1535468574
+      Right_Move_Spritesheet_v2_22: -1844994954
+      Right_Move_Spritesheet_v2_5: 614478670
+      Right_Move_Spritesheet_v2_26: 976623787
+      Right_Move_Spritesheet_v2_32: 1372436013
+      Right_Move_Spritesheet_v2_29: -2099046651
+      Right_Move_Spritesheet_v2_3: 1000954271
+      Right_Move_Spritesheet_v2_9: 784069666
+      Right_Move_Spritesheet_v2_35: 1199967868
+      Right_Move_Spritesheet_v2_30: 1774417504
+      Right_Move_Spritesheet_v2_31: 1054233493
+      Right_Move_Spritesheet_v2_37: -1034053720
+      Right_Move_Spritesheet_v2_33: 1064152498
+      Right_Move_Spritesheet_v2_40: 984155739
+      Right_Move_Spritesheet_v2_27: 1410581743
+      Right_Move_Spritesheet_v2_12: 744707828
+      Right_Move_Spritesheet_v2_2: -799322645
+      Right_Move_Spritesheet_v2_16: -1623001737
+      Right_Move_Spritesheet_v2_39: 1834953896
+      Right_Move_Spritesheet_v2_19: -694124836
+      Right_Move_Spritesheet_v2_41: 1227717849
+      Right_Move_Spritesheet_v2_21: -1239683469
+      Right_Move_Spritesheet_v2_34: 400681028
+      Right_Move_Spritesheet_v2_17: -628337386
+      Right_Move_Spritesheet_v2_38: -119825761
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
