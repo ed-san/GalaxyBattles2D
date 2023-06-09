@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
     private GameObject _specialShotPrefab;
     [SerializeField] 
     private GameObject _tripleSpecialShotPrefab;
+    [SerializeField] 
+    private GameObject _homingShotPrefab; 
     [SerializeField]
     private GameObject _shieldVisualizer;
     [SerializeField] 
@@ -48,6 +50,7 @@ public class Player : MonoBehaviour
     private bool _isSpecialShotActive = false;
     private bool _isShieldActive = false;
     private bool _isDamagedShieldActive = false;
+    private bool _isHomingShotActive = false;
     [SerializeField]
     private bool _isSpeedBoostActive = false;
     private bool _isAmmoReloadActive = false;
@@ -70,6 +73,9 @@ public class Player : MonoBehaviour
     private Slider _thrusterSlider;
     private bool _isEnergyRegenRunning = false;
     private bool _takeDamageActivePow = false;
+    private List<GameObject> _alreadyTargeted = new List<GameObject>(); // list to hold targeted enemies
+    private bool _enemiesPresent = false;
+
     
     void Start()
     { 
@@ -78,6 +84,7 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponents<AudioSource>();
         _thrusterSlider = _thrusterEnergyBar.GetComponent<Slider>();
+        Enemy.OnEnemyDestroyed += EnemyDestroyed;
 
 
         if (_thrusterSlider == null)
@@ -106,7 +113,9 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
         ThrusterEngaged();
+        CheckForEnemies();
         FireLaser();
+        
 
         if (_lives.Equals(3))
         {
@@ -139,9 +148,18 @@ public class Player : MonoBehaviour
 
             if (!AmmoIsEmpty() && GameManager.gameManager._ammoEnergy.Energy >= energyCost)
             {
-                InstantiateLaser();
-                LaserEnergyCost(energyCost);
-                _canFire = Time.time + _fireRate;
+                if (_enemiesPresent || !_isHomingShotActive)
+                {
+                    InstantiateLaser();
+                    LaserEnergyCost(energyCost);
+                    _canFire = Time.time + _fireRate; 
+                }
+                else
+                {
+                    //If there are no enemies to target with homing shot, play a cooldown sound
+                    _audioSource[3].Play();
+                }
+               
             }
             else if (AmmoIsEmpty() && !_isEnergyRegenRunning)
             {
@@ -173,13 +191,28 @@ public class Player : MonoBehaviour
             {
                 shotPrefab = _specialShotPrefab;
             }
+            else if (_isHomingShotActive)
+            {
+                shotPrefab = _homingShotPrefab;
+               
+            }
             else
             {
                 shotPrefab = _laserPrefab;
             }
+            
+            if (shotPrefab != null && _isHomingShotActive)
+            {
+                GameObject homingShot = Instantiate(shotPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity);
+                StartCoroutine(GuideHomingShot(homingShot)); // guiding the shot after instantiation
+                _audioSource[0].Play();
+            }
+            else
+            {
+                Instantiate(shotPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity);
+                _audioSource[0].Play();
+            }
 
-            Instantiate(shotPrefab, transform.position + _offSetLaserSpawn, Quaternion.identity);
-            _audioSource[0].Play();
         }
     }
     
@@ -189,6 +222,7 @@ public class Player : MonoBehaviour
         int tripleShotCost = 3; // Set the energy cost for a triple shot
         int specialShotCost = 5; // Set the energy cost for a special shot
         int tripleSpecialShotCost = 8; // Set the energy cost for a triple special shot
+        int homingShotCost = 2; // Set the energy cost for a homing shot
 
         if (_isTripleShotActive && _isSpecialShotActive)
         {
@@ -201,6 +235,10 @@ public class Player : MonoBehaviour
         else if (_isSpecialShotActive)
         {
             return specialShotCost;
+        }
+        else if (_isHomingShotActive)
+        {
+            return homingShotCost;
         }
         else
         {
@@ -339,9 +377,70 @@ public class Player : MonoBehaviour
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
-        StartCoroutine(TripleShotPowerDownRoutine(5));
+        StartCoroutine(TripleShotPowerDownRoutine(5.0f));
+    }
+
+    public void HomingShotActive()
+    {
+        _isHomingShotActive = true;
+        StartCoroutine(HomingShotPowerDownRoutine(6.0f));
     }
     
+    
+    IEnumerator GuideHomingShot(GameObject homingShot)
+    {
+        GameObject closestEnemy = FindClosestUntargetedEnemy();
+        Vector3 direction = Vector3.zero;
+
+        if (closestEnemy != null)
+        {
+            _alreadyTargeted.Add(closestEnemy);
+            direction = (closestEnemy.transform.position - homingShot.transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            homingShot.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
+        }
+
+        while (homingShot != null && closestEnemy != null)
+        {
+            direction = (closestEnemy.transform.position - homingShot.transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            homingShot.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
+            homingShot.transform.Translate(direction * Time.deltaTime * _speed, Space.World);
+            yield return null;
+        }
+    }
+
+    GameObject FindClosestUntargetedEnemy()
+    {
+        string[] enemyTags = { "Enemy", "AoeEnemy", "DodgeEnemy" };
+        GameObject closestEnemy = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (var enemyTag in enemyTags)
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
+            foreach (GameObject enemy in enemies)
+            {
+                if (_alreadyTargeted.Contains(enemy))
+                    continue;
+            
+                Enemy enemyScript = enemy.GetComponent<Enemy>();
+                if (enemyScript.IsDestroyed)
+                    continue;
+
+                float distance = (enemy.transform.position - transform.position).sqrMagnitude;
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestEnemy = enemy;
+                }
+            }
+        }
+
+        return closestEnemy;
+    }
+
+
     public void AmmoReloadActive()
     {
         _isAmmoReloadActive = true;
@@ -437,6 +536,12 @@ public class Player : MonoBehaviour
     {
             yield return new WaitForSeconds(waitTime);
             _isTripleShotActive= false;
+    }
+
+    IEnumerator HomingShotPowerDownRoutine(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        _isHomingShotActive = false;
     }
     
     IEnumerator SpecialShotPowerDownRoutine(float waitTime)
@@ -601,6 +706,51 @@ public class Player : MonoBehaviour
            powerup.SetAttract(false, null);
        }
    }
+   
+   private void OnDestroy()
+   {
+       Enemy.OnEnemyDestroyed -= EnemyDestroyed;
+   }
+   
+   void EnemyDestroyed(GameObject enemy)
+   {
+       _alreadyTargeted.Remove(enemy);
+   }
+   
+   private void CheckForEnemies()
+   {
+       // The tags you want to check
+       string[] tags = new string[] { "Enemy", "AoeEnemy", "DodgeEnemy" };
+
+       // A list to hold all the enemies
+       List<GameObject> enemies = new List<GameObject>();
+
+       // Iterate over the tags and add the game objects to the list
+       foreach (string tag in tags)
+       {
+           GameObject[] enemiesWithTag = GameObject.FindGameObjectsWithTag(tag);
+           foreach (GameObject enemyObject in enemiesWithTag)
+           {
+               Enemy enemyScript = enemyObject.GetComponent<Enemy>();
+               if (enemyScript != null && !enemyScript.IsDestroyed)//Checking if enemies have the flag isDestroyed set to true
+               {
+                   enemies.Add(enemyObject);
+               }
+           }
+       }
+
+       // If there are no enemies, set _enemiesPresent to false and play a cooldown sound
+       if (enemies.Count == 0)
+       {
+           _enemiesPresent = false;
+           // Play cooldown sound
+       }
+       else
+       {
+           _enemiesPresent = true;
+       }
+   }
+
    
    
 }

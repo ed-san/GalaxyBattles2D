@@ -42,9 +42,8 @@ public class Enemy : MonoBehaviour
     private float _pauseDuration = 1.5f;  // 1.5 seconds
     [SerializeField] private float dodgeSpeed = 25f;
     [SerializeField] private float dodgeDistance = 100.0f;
-    
-
-
+    public delegate void EnemyDestroyedAction(GameObject enemy);
+    public static event EnemyDestroyedAction OnEnemyDestroyed;
 
 
     private void Start()
@@ -80,10 +79,9 @@ public class Enemy : MonoBehaviour
 
         // Check the original movement type and set _isOriginallyAngle accordingly
         _isOriginallyAngle = _movementType == MovementType.Angle;
-
-
+        
     }
-
+    
     public enum MovementType
     {
         StraightDown,
@@ -108,8 +106,8 @@ public class Enemy : MonoBehaviour
                      CheckPowerUpLineOfSight();
                      // Detect and dodge player's laser
                      DetectLaserAndDodge();
-     
-                     if (_hasRearLineOfSight && gameObject.CompareTag("Enemy"))
+
+                         if (_hasRearLineOfSight && gameObject.CompareTag("Enemy"))
                      {
                          StartCoroutine(CounterAttack());
                      }
@@ -170,7 +168,7 @@ public class Enemy : MonoBehaviour
                  }
                  
                 
-         }
+         } 
      
      
      private IEnumerator DelayedFireLaser()
@@ -379,8 +377,13 @@ public class Enemy : MonoBehaviour
         }
         
 
-        if (other.CompareTag("Laser"))
+        if (other.CompareTag("Laser") || other.CompareTag("HomingShot"))
         {
+            _isDestroyed = true;
+
+            // Invoke event right after we've decided to destroy the enemy.
+            OnEnemyDestroyed?.Invoke(this.gameObject);
+            
             Destroy(other.gameObject);
             
             if (_isShieldActive)
@@ -747,39 +750,6 @@ public class Enemy : MonoBehaviour
                 _isStopped = false;
         }
         
-       /* private void DetectLaserAndDodge()
-        {
-            // Set the detection range
-            float detectionRange = 8.0f;
-
-            // Cast a ray to the right and left
-            RaycastHit2D hitInfoRight = Physics2D.Raycast(transform.position, Vector2.right, detectionRange, LayerMask.GetMask("Player Laser"));
-            RaycastHit2D hitInfoLeft = Physics2D.Raycast(transform.position, Vector2.left, detectionRange, LayerMask.GetMask("Player Laser"));
-
-            // Debug lines
-            Debug.DrawRay(transform.position, Vector2.right * detectionRange, Color.yellow);
-            Debug.DrawRay(transform.position, Vector2.left * detectionRange, Color.yellow);
-
-            // Get the animator component
-            Animator animator = GetComponent<Animator>();
-
-            // Check if the right ray hit a laser
-            if (hitInfoRight.collider != null)
-            {
-                // Laser detected on the right side, dodge to the left
-                Dodge(-dodgeDistance);  // Move to the left
-                animator.SetTrigger("LeftDodge");  // Trigger the LeftDodge animation
-            }
-            // Check if the left ray hit a laser
-            else if (hitInfoLeft.collider != null)
-            {
-                // Laser detected on the left side, dodge to the right
-                Dodge(dodgeDistance);  // Move to the right
-                animator.SetTrigger("RightDodge");  // Trigger the RightDodge animation
-            }
-        }
-        
-        */
        private void DetectLaserAndDodge()
        {
            // Set the detection range and the number of rays
@@ -788,6 +758,12 @@ public class Enemy : MonoBehaviour
 
            // Get the animator component
            Animator animator = GetComponent<Animator>();
+           
+           // Output the names of all parameters in the Animator
+           foreach (AnimatorControllerParameter parameter in animator.parameters)
+           {
+               Debug.Log("Animator parameter: " + parameter.name);
+           }
 
            bool shouldDodge = false;
 
@@ -832,8 +808,11 @@ public class Enemy : MonoBehaviour
 
            if (!shouldDodge)
            {
-               animator.ResetTrigger("LeftDodge");
-               animator.ResetTrigger("RightDodge");
+               if(Array.Exists(animator.parameters, p => p.name == "LeftDodge"))
+                   animator.ResetTrigger("LeftDodge");
+
+               if(Array.Exists(animator.parameters, p => p.name == "RightDodge"))
+                   animator.ResetTrigger("RightDodge");
            }
        }
 
@@ -848,8 +827,9 @@ public class Enemy : MonoBehaviour
         }
         
      
-
-
-
-
+        public bool IsDestroyed
+        {
+            get { return _isDestroyed; }
+        }
+        
 }

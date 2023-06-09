@@ -49,8 +49,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerUpSpeed: 1
-  _powerupID: 5
+  _powerupID: 8
   _powerUpClip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _audioSource: []
+  attracted: 0
 --- !u!212 &7444335622282600136
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -140,6 +140,8 @@ MonoBehaviour:
   _powerUpSpeed: 5
   _powerupID: 7
   _powerUpClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  _audioSource: []
+  attracted: 0
 --- !u!95 &519834362074000387
 Animator:
   serializedVersion: 4

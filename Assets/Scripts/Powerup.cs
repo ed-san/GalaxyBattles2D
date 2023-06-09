@@ -20,7 +20,7 @@ public class Powerup : MonoBehaviour
     private AudioSource[] _audioSource;
     public bool attracted = false;
     private GameObject _player;
-    private string[] _powerupNames = new string[] {"TripleShot", "Speed", "Shield", "Ammo", "Heal"};
+    private string[] _powerupNames = new string[] {"TripleShot", "Speed", "Shield", "Ammo", "Heal", "Homing"};
     private float attractSpeed = 5.0f;
 
     private void Start()
@@ -34,7 +34,7 @@ public class Powerup : MonoBehaviour
         }
         else
         {
-            if (_powerupID < 5) // Update this line
+            if (_powerupID < 6) // Update this line
             {
                 _anim.SetTrigger("Play" + _powerupNames[_powerupID] + "Powerup");
             }
@@ -92,13 +92,16 @@ public class Powerup : MonoBehaviour
                         player.HealActive();
                         break;
                     case 5:
-                        player.SpecialShotActive();
+                        player.HomingShotActive();
                         break;
                     case 6:
                         player.DrainEnergyActive();
                         break;
                     case 7:
                         player.TakeDamageActive();
+                        break;
+                    case 8:
+                        player.SpecialShotActive();
                         break;
                     default:
                         Debug.Log("Undetected Powerup picked up!");

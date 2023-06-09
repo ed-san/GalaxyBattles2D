@@ -46,10 +46,10 @@ public class SpawnManager : MonoBehaviour
     public void StartSpawning()
     {
         StartCoroutine(DodgeEnemySpawnRoutine(5.0f));
-        //StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
-        //StartCoroutine(WaveManagement(_wave, _waveDuration));
-        //StartCoroutine(SpawnPowerupRoutine());
-        //StartCoroutine(SpecialBlastSpawnRoutine(_specialShotSpawnRate));
+        StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
+        StartCoroutine(WaveManagement(_wave, _waveDuration));
+        StartCoroutine(SpawnPowerupRoutine());
+        StartCoroutine(SpecialBlastSpawnRoutine(_specialShotSpawnRate));
     }
 
     IEnumerator WaveManagement(int _wave, float _waveDuration)
