@@ -30,6 +30,20 @@ public class SpawnManager : MonoBehaviour
     private float _maxSpawnRate = .25f;
     private float _spawnDecreaseRate = 0.05f;
     private UIManager _uiManager;
+    [SerializeField]
+    private GameObject[] _bossPrefabs; // The prefabs for the bosses
+    [SerializeField]
+    private AudioClip _bossMusic;
+    [SerializeField]
+    private AudioClip _originalMusic;
+    
+    public delegate void OnWaveUpdateHandler(int wave);
+    public event OnWaveUpdateHandler OnWaveUpdate;
+    
+    public delegate void BossSpawnedAction();
+    public static event BossSpawnedAction OnBossSpawned;
+    private AudioSource _backgroundMusic;
+
 
     private void Start()
     {
@@ -40,6 +54,15 @@ public class SpawnManager : MonoBehaviour
             Debug.LogError("UIManager is NULL!");
         }
         
+        _backgroundMusic = GameObject.Find("Audio_Manager/Background").GetComponent<AudioSource>();
+        if(_backgroundMusic == null)
+        {
+            Debug.LogError("Background music AudioSource is NULL!");
+        }
+        else
+        {
+            _originalMusic = _backgroundMusic.clip; // Save the original music
+        }
         
     }
 
@@ -69,6 +92,8 @@ public class SpawnManager : MonoBehaviour
 
         _waveDuration = WaveDurationAssignment(_waveDuration);
         _wave++;
+        
+        OnWaveUpdate?.Invoke(_wave); // Invoke the wave update event
 
         _uiManager.UpdateWaveCount(_wave);
 
@@ -247,6 +272,53 @@ public class SpawnManager : MonoBehaviour
     public int GetWave
     {
         get { return _wave; }
+    }
+    
+    public void SpawnBoss(int level)
+    {
+        Debug.Log("SpawnBoss called. Level: " + level);
+        // You'll need to define where and how the boss is spawned
+        Vector3 spawnPosition = new Vector3(0.2f, 10.8f, 0.0f); // Spawns slightly off-screen top-center.
+        // Adjust level to account for main menu scene
+        level -= 1;
+
+        // Check if the level is valid (i.e., we have a boss for this level)
+        if (level < 0 || level >= _bossPrefabs.Length)
+        {
+            Debug.LogError("Current level:" + level);
+            Debug.LogError("Invalid level!");
+            return;
+        }
+    
+        GameObject bossInstance = Instantiate(_bossPrefabs[level], spawnPosition, Quaternion.identity);
+
+        BossController bossController = bossInstance.GetComponent<BossController>();
+
+        if(bossController != null)
+        {
+            _backgroundMusic.Stop();
+            StartCoroutine(PlayBossMusicDelayed(0.5f * bossController.moveDuration));
+        }
+        else
+        {
+            Debug.LogError("BossController not found on the boss instance.");
+        }
+
+        OnBossSpawned?.Invoke();
+    }
+    
+    IEnumerator PlayBossMusicDelayed(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        // Replace this line with the code to start your boss music
+        _backgroundMusic.clip = _bossMusic;
+        _backgroundMusic.Play();
+    }
+    
+    public void PlayOriginalMusic()
+    {
+        _backgroundMusic.clip = _originalMusic;
+        _backgroundMusic.Play();
     }
     
 }

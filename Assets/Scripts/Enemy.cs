@@ -1,4 +1,4 @@
-git using System;
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -79,6 +79,8 @@ public class Enemy : MonoBehaviour
 
         // Check the original movement type and set _isOriginallyAngle accordingly
         _isOriginallyAngle = _movementType == MovementType.Angle;
+        
+        SpawnManager.OnBossSpawned += StartDeathSequence;
         
     }
     
@@ -826,10 +828,36 @@ public class Enemy : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, dodgeSpeed * Time.deltaTime);
         }
         
+        
+        public void StartDeathSequence()
+        {
+            // If the enemy is already destroyed, just return.
+            if (_isDestroyed)
+            {
+                return;
+            }
+
+            // Put your death logic here. 
+            _isDestroyed = true;
+            _anim.SetTrigger("OnEnemyDeath");
+            _enemySpeed = 0;
+            _audioSource[0].Play();
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 2.2f); 
+        }
+        
+        private void OnDestroy()
+        {
+            SpawnManager.OnBossSpawned -= StartDeathSequence;
+        }
+        
+        /* Properties */
      
         public bool IsDestroyed
         {
             get { return _isDestroyed; }
         }
+        
+        
         
 }
