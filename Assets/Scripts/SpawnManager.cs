@@ -19,6 +19,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private float _spawnRate = 5.0f;
     private bool _stopSpawning = false;
+    private bool _stopPowerupSpawning = false;
     [SerializeField] 
     private float _specialShotSpawnRate = 30.0f;
     [SerializeField] 
@@ -44,6 +45,9 @@ public class SpawnManager : MonoBehaviour
     public static event BossSpawnedAction OnBossSpawned;
     private AudioSource _backgroundMusic;
 
+    public int currentWave = 0;
+    
+
 
     private void Start()
     {
@@ -65,6 +69,7 @@ public class SpawnManager : MonoBehaviour
         }
         
     }
+    
 
     public void StartSpawning()
     {
@@ -188,7 +193,7 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1.5f);
         
-        while (_stopSpawning == false) 
+        while (_stopPowerupSpawning == false) 
         { 
             Vector3 spawnPowPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             int numberOfPowerups = _powerups.Length;
@@ -212,6 +217,7 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+        _stopPowerupSpawning = true;
     }
 
     IEnumerator SpecialBlastSpawnRoutine(float waitTime)
@@ -293,18 +299,25 @@ public class SpawnManager : MonoBehaviour
         GameObject bossInstance = Instantiate(_bossPrefabs[level], spawnPosition, Quaternion.identity);
 
         BossController bossController = bossInstance.GetComponent<BossController>();
+        
+        OnBossSpawned?.Invoke();
 
         if(bossController != null)
         {
             _backgroundMusic.Stop();
             StartCoroutine(PlayBossMusicDelayed(0.5f * bossController.moveDuration));
+            // If _stopPowerupSpawning is true, restart the SpawnPowerupRoutine coroutine.
+            // after the boss has moved to its final position
+            if(_stopPowerupSpawning)
+            {
+                StartCoroutine(DelayPowerupSpawning(bossController.moveDuration));
+            }
         }
         else
         {
             Debug.LogError("BossController not found on the boss instance.");
         }
 
-        OnBossSpawned?.Invoke();
     }
     
     IEnumerator PlayBossMusicDelayed(float delay)
@@ -319,6 +332,13 @@ public class SpawnManager : MonoBehaviour
     {
         _backgroundMusic.clip = _originalMusic;
         _backgroundMusic.Play();
+    }
+    
+    IEnumerator DelayPowerupSpawning(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _stopPowerupSpawning = false;
+        StartCoroutine(SpawnPowerupRoutine());
     }
     
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
     public EnergyBarUI _thrusterEnergyBarUI;
     private int _currentLevel;
     private SpawnManager _spawnManager;
-    
+
 
     void Start()
     {
@@ -97,6 +98,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Current level: " + _currentLevel);
                 _spawnManager.SpawnBoss(_currentLevel); // spawn the boss for the current level
             }
+            
         }
     }
 }

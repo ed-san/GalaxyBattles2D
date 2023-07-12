@@ -6,7 +6,7 @@ public class BossController : MonoBehaviour
 {
     public Vector3 startPosition = new Vector3(0.2f, 10.8f, 0f);
     public Vector3 endPosition = new Vector3(0.2f, 4.1f, 0f);
-    public float moveDuration = 7f; // Duration in seconds.
+    public float moveDuration = 7.0f; // Duration in seconds.
 
     // Start is called before the first frame update
     void Start()
