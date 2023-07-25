@@ -3465,9 +3465,10 @@ MonoBehaviour:
   _aoeEnemySpawnRate: 30
   _specialShotPrefab: {fileID: 4989294637185965692, guid: 8b86f5bdd2b0fca4dbc2fdf97ba3267e, type: 3}
   _bossPrefabs:
-  - {fileID: 8733928977486048914, guid: e63754dbb9cc41240953e12cfd5f5d55, type: 3}
+  - {fileID: 908502152818896444, guid: e63754dbb9cc41240953e12cfd5f5d55, type: 3}
   _bossMusic: {fileID: 8300000, guid: fbce599948ffff6428d0586f46c05c67, type: 3}
   _originalMusic: {fileID: 8300000, guid: 5b17a0088dcdf924fa92da5af1e1be07, type: 3}
+  currentWave: 0
 --- !u!1 &2069453735
 GameObject:
   m_ObjectHideFlags: 0

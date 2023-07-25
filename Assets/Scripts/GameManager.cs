@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     {
         _ammoEnergy = new EnergyBar(15, 15);
         _thrusterEnergy = new EnergyBar(100, 100);
+        
         // Set up thruster energy bar
         _thrusterEnergyBarUI = GameObject.FindGameObjectWithTag("ThrusterEnergyBar").GetComponent<EnergyBarUI>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();

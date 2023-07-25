@@ -328,6 +328,8 @@ public class Player : MonoBehaviour
         {
             _lives -= damageAmount;
             
+            _uiManager.UpdateLives(_lives);
+            
             if (_lives.Equals(2))
             {
                 _rightEngineVisualizer.SetActive(true);
@@ -343,7 +345,7 @@ public class Player : MonoBehaviour
                 DestroyedPlayerSequence();
             }
 
-            _uiManager.UpdateLives(_lives);
+            
         }
        
     }
@@ -607,6 +609,7 @@ public class Player : MonoBehaviour
 
     void DestroyedPlayerSequence()
     {
+        Debug.Log("Player.DestroyedPlayerSequence: Method called");
         _spawnManager.OnPlayerDeath();
         _speed = 0.0f;
         Instantiate(_playerDeath, transform.position, Quaternion.identity);

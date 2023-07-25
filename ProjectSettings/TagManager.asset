@@ -18,11 +18,13 @@ TagManager:
   - AoeEnemyLaserParent
   - DodgeEnemy
   - HomingShot
+  - Boss
+  - BossHealthBar
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Boss
   - Water
   - UI
   - Post Processing
