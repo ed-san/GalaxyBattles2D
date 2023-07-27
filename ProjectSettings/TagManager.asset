@@ -20,6 +20,7 @@ TagManager:
   - HomingShot
   - Boss
   - BossHealthBar
+  - BossLaser
   layers:
   - Default
   - TransparentFX

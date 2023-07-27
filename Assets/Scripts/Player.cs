@@ -396,7 +396,11 @@ public class Player : MonoBehaviour
 
         if (closestEnemy != null)
         {
-            _alreadyTargeted.Add(closestEnemy);
+            // Only add the enemy to the _alreadyTargeted list if it's not the boss
+            if (!closestEnemy.CompareTag("Boss"))
+            {
+                _alreadyTargeted.Add(closestEnemy);
+            }
             direction = (closestEnemy.transform.position - homingShot.transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             homingShot.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
@@ -414,7 +418,7 @@ public class Player : MonoBehaviour
 
     GameObject FindClosestUntargetedEnemy()
     {
-        string[] enemyTags = { "Enemy", "AoeEnemy", "DodgeEnemy" };
+        string[] enemyTags = { "Enemy", "AoeEnemy", "DodgeEnemy", "Boss" };
         GameObject closestEnemy = null;
         float closestDistance = Mathf.Infinity;
 
@@ -423,12 +427,22 @@ public class Player : MonoBehaviour
             GameObject[] enemies = GameObject.FindGameObjectsWithTag(enemyTag);
             foreach (GameObject enemy in enemies)
             {
+                Debug.Log("Checking enemy with tag: " + enemy.tag);
                 if (_alreadyTargeted.Contains(enemy))
                     continue;
-            
-                Enemy enemyScript = enemy.GetComponent<Enemy>();
-                if (enemyScript.IsDestroyed)
-                    continue;
+
+                if (enemyTag != "Boss") 
+                {
+                    Enemy enemyScript = enemy.GetComponent<Enemy>();
+                    if (enemyScript != null && enemyScript.IsDestroyed) // Only check for IsDestroyed if it's not the Boss
+                        continue;
+                }
+                else // If it's the Boss
+                {
+                    BossController bossController = enemy.GetComponent<BossController>();
+                    if (bossController != null && bossController.IsDestroyed) // Check for IsDestroyed in the BossController script
+                        continue;
+                }
 
                 float distance = (enemy.transform.position - transform.position).sqrMagnitude;
                 if (distance < closestDistance)
@@ -436,6 +450,7 @@ public class Player : MonoBehaviour
                     closestDistance = distance;
                     closestEnemy = enemy;
                 }
+
             }
         }
 
@@ -723,7 +738,7 @@ public class Player : MonoBehaviour
    private void CheckForEnemies()
    {
        // The tags you want to check
-       string[] tags = new string[] { "Enemy", "AoeEnemy", "DodgeEnemy" };
+       string[] tags = new string[] { "Enemy", "AoeEnemy", "DodgeEnemy", "Boss" };
 
        // A list to hold all the enemies
        List<GameObject> enemies = new List<GameObject>();
@@ -739,6 +754,15 @@ public class Player : MonoBehaviour
                {
                    enemies.Add(enemyObject);
                }
+               else
+               {
+                   BossController bossController = enemyObject.GetComponent<BossController>();
+                   if (bossController != null && !bossController.IsDestroyed) // Check for IsDestroyed in the BossController script
+                   {
+                       enemies.Add(enemyObject);
+                   }
+               }
+
            }
        }
 

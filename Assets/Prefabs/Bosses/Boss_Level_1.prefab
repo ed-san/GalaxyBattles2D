@@ -32,7 +32,7 @@ Transform:
   m_GameObject: {fileID: 908502152818896444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.2, y: 10.8, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8479860026630544231}
@@ -363,18 +363,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startPosition: {x: 0.2, y: 10.8, z: 0}
-  endPosition: {x: 0.2, y: 3.26, z: 0}
-  moveDuration: 6
-  _audioSource:
-  - {fileID: 0}
+  endPosition: {x: 0.2, y: 4.25, z: 0}
+  moveDuration: 7
+  _audioSource: []
   _cameraShakeStrength: 5
-  initialHealth: 30
-  maxHealth: 30
+  initialHealth: 100
+  maxHealth: 100
   _laserPrefab: {fileID: 249049102865344551, guid: 9741f442e2c442b448a6a95675ac3467, type: 3}
   _waveSize: 5
-  _waveAngle: 45
+  _waveAngle: 140
   _fireRate: 3.5
   _laserWaveCycleCounter: 1
+  _buildUpWaveCycleCounter: 1
+  _isBuildUpPhase: 1
+  _hasEnteredRapidFire: 0
 --- !u!1 &8479860026266257419
 GameObject:
   m_ObjectHideFlags: 0

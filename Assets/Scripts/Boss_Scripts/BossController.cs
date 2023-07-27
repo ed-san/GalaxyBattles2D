@@ -8,7 +8,7 @@ using UnityEngine;
 public class BossController : MonoBehaviour
 {
     public Vector3 startPosition = new Vector3(0.2f, 10.8f, 0f);
-    public Vector3 endPosition = new Vector3(0.2f, 3.26f, 0f);
+    public Vector3 endPosition = new Vector3(0.2f, 4.25f, 0f);
     public float moveDuration = 7.0f; // Duration in seconds.
     private Slider _bossHealthBarSlider;
     private bool _isDestroyed = false;
@@ -24,9 +24,9 @@ public class BossController : MonoBehaviour
     public static event BossDestroyedAction OnBossDestroyed;
     private BossHealthBarUI _bossHealthBarUI;
     [SerializeField]
-    private int initialHealth = 30;
+    private int initialHealth = 100;
     [SerializeField]
-    private int maxHealth = 30;
+    private int maxHealth = 100;
     private BossHealthBar _bossHealthBar;
     
     /* Variables Regarding Boss Lasers */
@@ -37,7 +37,7 @@ public class BossController : MonoBehaviour
     private int _waveSize = 5; 
     // The total angle of the wave in degrees
     [SerializeField]
-    private float _waveAngle = 45; 
+    private float _waveAngle = 140; 
     [SerializeField]
     private float _fireRate = 3.5f; 
     private float _fireCounter = 0.0f;
@@ -53,7 +53,15 @@ public class BossController : MonoBehaviour
     private const int _maxWaveSize = 100; // The maximum wave size before entering rapid fire mode.
     private int _waveSizeIncrease = 1; // The amount to increase the wave size by each time the boss fires.
     private int _waveAngleIncrease = 12; // The amount to increase the wave angle by each time the boss fires.
-    private const int _maxLaserWaveCycleCounter = 3; // The maximum value for the laser wave cycle counter.
+    private const int _maxLaserWaveCycleCounter = 6; // The maximum value for the laser wave cycle counter.
+    [SerializeField]
+    private int _buildUpWaveCycleCounter = 1; // Counter for the buildup during non-rapid fire phase
+    [SerializeField]
+    private bool _isBuildUpPhase = true; // Flag to indicate whether the boss is in the build-up phase.
+    [SerializeField]
+    private bool _hasEnteredRapidFire = false;
+
+
     
 
     
@@ -152,39 +160,47 @@ public class BossController : MonoBehaviour
         {
            // Increase the counter by the time since the last frame
         _fireCounter += Time.deltaTime;
+        
+        // Determine the fire rate based on whether we're in rapid fire mode.
+        float currentFireRate;
+        if (_isRapidFireMode)
+        {
+            currentFireRate = _rapidFireRate;
+        }
+        else
+        {
+            currentFireRate = _fireRate;
+        }
 
         // Check if it's time to fire a wave
-        if (_fireCounter >= (_isRapidFireMode ? _rapidFireRate : _fireRate))
+        if (_fireCounter >= currentFireRate)
         {
-            FireWave();
-            _fireCounter = 0.0f; // Reset the counter
-
-            // If we're not in rapid fire mode, increase the wave size and angle.
-            if (!_isRapidFireMode)
+            // If we've just entered rapid fire mode, don't fire a wave yet.
+            if (_hasEnteredRapidFire)
             {
-                _waveSize = Mathf.Min(_waveSize + _waveSizeIncrease, _maxWaveSize);
-                switch (_laserWaveCycleCounter)
-                {
-                    case 1:
-                        _waveAngleIncrease = 12;
-                        _waveAngle = Mathf.Min(_waveAngle + _waveAngleIncrease, _waveOneMaxAngle);
-                        break;
-                    case 2:
-                        _waveAngleIncrease = 17;
-                        _waveAngle = Mathf.Min(_waveAngle + _waveAngleIncrease, _waveTwoMaxAngle);
-                        break;
-                    case 3:
-                        _waveAngleIncrease = 23;
-                        _waveAngle = Mathf.Min(_waveAngle + _waveAngleIncrease, _waveThreeMaxAngle);
-                        break;
-                }
+                _hasEnteredRapidFire = false;
+            }
+            else
+            {
+                FireWave();
+                _fireCounter = 0.0f; // Reset the counter
 
-                // If we've reached the maximum wave size, enter rapid fire mode.
-                if (_waveSize >= 11 && !_isRapidFireMode)
+                // If we're not in rapid fire mode, increase the wave size and angle.
+                if (!_isRapidFireMode)
                 {
-                    _isRapidFireMode = true;
-                    _fireRate = _rapidFireRate;
-                    _waveSize = 100;
+                    _waveSize = Mathf.Min(_waveSize + _waveSizeIncrease, _maxWaveSize);
+
+                    // If we've reached the maximum wave size, enter rapid fire mode.
+                    if (_waveSize >= 11 && !_isRapidFireMode)
+                    {
+                        _isRapidFireMode = true;
+                        _isBuildUpPhase = false;
+                        _fireRate = _rapidFireRate;
+                        _waveSize = 100;
+
+                        // Set _hasEnteredRapidFire to true.
+                        _hasEnteredRapidFire = true;
+                    }
                 }
             }
         }
@@ -194,29 +210,37 @@ public class BossController : MonoBehaviour
         {
             _rapidFireCounter += Time.deltaTime;
 
-            // If we've been in rapid fire mode for long enough, reset to normal mode.
             if (_rapidFireCounter >= _rapidFireDuration)
             {
                 _isRapidFireMode = false;
+                _isBuildUpPhase = true;
                 _rapidFireCounter = 0.0f;
+                // Update the _laserWaveCycleCounter here, so it changes each time a wave is fired
                 _laserWaveCycleCounter = (_laserWaveCycleCounter % _maxLaserWaveCycleCounter) + 1;
-                
+
                 switch (_laserWaveCycleCounter)
                 {
                     case 1:
+                    case 4:
                         _fireRate = 3.5f;  // Reset fire rate to 3.5 when wave counter is 1
+                        _waveAngle = 120;
                         break;
                     case 2:
+                    case 5:
                         _fireRate = 3.0f;  // Decrease fire rate to 3 when wave counter is 2
+                        _waveAngle = 130;
                         break;
                     case 3:
+                    case 6:
                         _fireRate = 2.5f;  // Decrease fire rate to 2.5 when wave counter is 3
+                        _waveAngle = 150;
                         break;
                 }
 
                 // reset wave size and angle to defaults
                 _waveSize = 5;
-                _waveAngle = 45;
+                //_waveAngle = 140;
+                
             }
         }
 
@@ -247,7 +271,7 @@ public class BossController : MonoBehaviour
             }
         }
 
-        if (other.CompareTag("Laser"))
+        if (other.CompareTag("Laser") || other.CompareTag("HomingShot"))
         {
             _bossHealthBar.TakeDamage(1);  // boss takes damage
             _bossHealthBarUI.UpdateHealthBar(_bossHealthBar.Health);
@@ -332,6 +356,26 @@ public class BossController : MonoBehaviour
     
     void FireWave()
     {
+        // If in rapid fire mode, set wave angle based on laser wave cycle counter
+        if (_isRapidFireMode)
+        {
+            switch (_laserWaveCycleCounter)
+            {
+                case 1:
+                case 4:
+                    _waveAngle = 120;
+                    break;
+                case 2:
+                case 5:
+                    _waveAngle = 130;
+                    break;
+                case 3:
+                case 6:
+                    _waveAngle = 150;
+                    break;
+            }
+        }
+        
         // Calculate the angle between each laser in the wave
         float step = _waveAngle / (_waveSize - 1);
 
@@ -359,6 +403,36 @@ public class BossController : MonoBehaviour
             // This is a boss's laser
             laser.AssignEnemyLaser();
         }
+        
+        // Only update _buildUpWaveCycleCounter and _waveAngle if not in rapid fire mode
+        if (!_isRapidFireMode && _isBuildUpPhase)
+        {
+            // Update the _buildUpWaveCycleCounter here, so it changes each time a wave is fired
+            _buildUpWaveCycleCounter = (_buildUpWaveCycleCounter % 6) + 1;
+
+            switch (_buildUpWaveCycleCounter)
+            {
+                case 1:
+                    _waveAngle = 140;
+                    break;
+                case 2:
+                    _waveAngle = 70;
+                    break;
+                case 3:
+                    _waveAngle = 35;
+                    break;
+                case 4:
+                    _waveAngle = 35;
+                    break;
+                case 5:
+                    _waveAngle = 70;
+                    break;
+                case 6:
+                    _waveAngle = 140;
+                    break;
+            }
+        }
+        
     }
     
 
@@ -366,6 +440,12 @@ public class BossController : MonoBehaviour
     {
         return _bossHealthBar;
     }
+    
+    public bool IsDestroyed
+    {
+        get { return _isDestroyed; }
+    }
+
 
 
 }
