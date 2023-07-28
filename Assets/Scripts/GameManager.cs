@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     private void CheckBossWave(int wave)
     {
         Debug.Log("CheckBossWave called. Wave: " + wave);
-        if(wave == 2) // change to whatever wave the boss is supposed to appear on
+        if(wave == 10) // change to whatever wave the boss is supposed to appear on
         {
             // Find the SpawnManager to stop spawning enemies
             if (_spawnManager != null)

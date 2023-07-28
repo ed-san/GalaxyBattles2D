@@ -466,8 +466,7 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("SpecialShot"))
         {
-            Destroy(other.gameObject);
-            
+
             if (_isShieldActive)
             {
                 _audioSource[2].Play();

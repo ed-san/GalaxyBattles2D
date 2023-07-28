@@ -273,7 +273,17 @@ public class BossController : MonoBehaviour
 
         if (other.CompareTag("Laser") || other.CompareTag("HomingShot"))
         {
-            _bossHealthBar.TakeDamage(1);  // boss takes damage
+            Destroy(other.gameObject);
+            
+            if (other.CompareTag("HomingShot"))
+            {
+                _bossHealthBar.TakeDamage(2);  // boss takes damage
+            }
+            else
+            {
+                _bossHealthBar.TakeDamage(1);  // boss takes damage
+            }
+            
             _bossHealthBarUI.UpdateHealthBar(_bossHealthBar.Health);
                 
             if (_bossHealthBar.Health <= 0)  // check if boss's health is 0 or less
@@ -286,22 +296,16 @@ public class BossController : MonoBehaviour
                 Destroy(this.gameObject, 2.2f);
             }
         }
-
-
-        /* This next block will handle the boss logic when he gains the shield in the final phase */
-        if (other.CompareTag("Laser") || other.CompareTag("HomingShot"))
+        
+        if (other.CompareTag("SpecialShot"))
         {
-            // Invoke event right after we've decided to destroy the enemy.
-            OnBossDestroyed?.Invoke(this.gameObject);
+            _bossHealthBar.TakeDamage(20);  // boss takes damage
+                _bossHealthBarUI.UpdateHealthBar(_bossHealthBar.Health);
 
-            Destroy(other.gameObject);
-
-            if (gameObject.CompareTag("Boss"))
-            {
-                _bossHealthBar.TakeDamage(1);  // boss takes damage
-                
-                if (_bossHealthBar.Health <= 0)  // check if boss's health is 0 or less
+                if (_bossHealthBar.Health <= 0) // check if boss's health is 0 or less
                 {
+                    // Invoke event right after we've decided to destroy the enemy.
+                    OnBossDestroyed?.Invoke(this.gameObject);
                     _isDestroyed = true;
 
                     _anim.SetTrigger("OnEnemyDeath");
@@ -309,50 +313,21 @@ public class BossController : MonoBehaviour
                     Destroy(GetComponent<Collider2D>());
                     Destroy(this.gameObject, 2.2f);
                 }
-            }
 
-            /*The logic below will handle the points the player earns for defeating the boss on stage 1.
-             This will vary from level to level and will have to create a new enum to hold the points 
-             for each levels boss*/
-
-            /*if (_player != null)
-                {
-                    int scoreToAdd = 0;
-                    switch (_movementType)
-                    {
-                        case MovementType.StraightDown:
-                            scoreToAdd = 2;
-                            break;
-                        case MovementType.SineWave:
-                            scoreToAdd = 4;
-                            break;
-                        case MovementType.Circle:
-                            scoreToAdd = 8;
-                            break;
-                        case MovementType.Angle:
-                            scoreToAdd = 16;
-                            if (gameObject.CompareTag("AoeEnemy"))
-                            {
-                                scoreToAdd += 8;
-                            }
-
-                            break;
-                        default:
-                            throw new InvalidOperationException($"Unhandled MovementType: {_movementType}");
-                    }
-
-                    _player.IncreaseScore(scoreToAdd);
-                }
-
-            }
-            */
-
+             SpriteRenderer specialShotSprite = other.gameObject.GetComponent<SpriteRenderer>();
+            specialShotSprite.enabled = false;
+            Laser specialShot = other.gameObject.GetComponent<Laser>();
+            specialShot.SetProjectileSpeed(0);
+            ParticleSystem specialShotParticles = other.gameObject.GetComponent<ParticleSystem>();
+            specialShotParticles.Play();
+            CircleCollider2D specialShotColliderRadius = other.gameObject.GetComponent<CircleCollider2D>();
+            specialShotColliderRadius.radius = 18.3f;
+            Destroy(other.gameObject, 4.0f);
 
         }
         
-        
-        
     }
+    
     
     void FireWave()
     {

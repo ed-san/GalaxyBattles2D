@@ -222,7 +222,7 @@ public class Player : MonoBehaviour
         int tripleShotCost = 3; // Set the energy cost for a triple shot
         int specialShotCost = 5; // Set the energy cost for a special shot
         int tripleSpecialShotCost = 8; // Set the energy cost for a triple special shot
-        int homingShotCost = 2; // Set the energy cost for a homing shot
+        int homingShotCost = 1; // Set the energy cost for a homing shot
 
         if (_isTripleShotActive && _isSpecialShotActive)
         {

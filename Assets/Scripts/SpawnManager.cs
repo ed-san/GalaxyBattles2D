@@ -17,18 +17,18 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
-    private float _spawnRate = 5.0f;
+    private float _spawnRate = 20.0f;
     private bool _stopSpawning = false;
     private bool _stopPowerupSpawning = false;
     [SerializeField] 
-    private float _specialShotSpawnRate = 30.0f;
+    private float _specialShotSpawnRate = 7.0f;
     [SerializeField] 
-    private float _aoeEnemySpawnRate = 30.0f;
+    private float _aoeEnemySpawnRate = 10.0f;
     [SerializeField] 
     private GameObject _specialShotPrefab;
-    private float _waveDuration = 10.0f;
+    private float _waveDuration = 3.0f;
     private int _wave = 1;
-    private float _maxSpawnRate = .25f;
+    private float _maxSpawnRate = .50f;
     private float _spawnDecreaseRate = 0.05f;
     private UIManager _uiManager;
     [SerializeField]
@@ -73,7 +73,7 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawning()
     {
-        StartCoroutine(DodgeEnemySpawnRoutine(5.0f));
+        StartCoroutine(DodgeEnemySpawnRoutine(10.0f));
         StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
         StartCoroutine(WaveManagement(_wave, _waveDuration));
         StartCoroutine(SpawnPowerupRoutine());
@@ -122,19 +122,19 @@ public class SpawnManager : MonoBehaviour
 
         switch (wave)
         {
-            case int w when w >= 1 && w <= 5: //original values: 1:5
+            case int w when w >= 1 && w <= 2: //original values: 1:5
                 movementType = Enemy.MovementType.StraightDown;
                 break;
-            case int w when w >= 6 && w <= 10://original values: 6:10
+            case int w when w >= 3 && w <= 4://original values: 6:10
                 movementType = Enemy.MovementType.Circle;
                 break;
-            case int w when w >= 11 && w <= 15://original values: 11:15
+            case int w when w >= 5 && w <= 6://original values: 11:15
                 movementType = Enemy.MovementType.Angle;
                 break;
-            case int w when w >= 16 && w <= 20://original values: 16:20
+            case int w when w >= 7 && w <= 8://original values: 16:20
                 movementType = Enemy.MovementType.SineWave;
                 break;
-            case int w when w > 20:
+            case int w when w > 8:
                 movementType = (Enemy.MovementType)Random.Range(0, 4); // Choose a random MovementType for waves greater than 20
                 break;
             default:
@@ -148,8 +148,8 @@ public class SpawnManager : MonoBehaviour
     
     private float WaveDurationAssignment(float waveDuration)
     {
-        const float increment = 2.0f;
-        const float maxWaveDuration = 60.0f;
+        const float increment = 1.0f;
+        const float maxWaveDuration = 3.0f;
 
         float newWaveDuration = waveDuration + increment;
         if (newWaveDuration > maxWaveDuration)
@@ -210,7 +210,7 @@ public class SpawnManager : MonoBehaviour
                 Instantiate(_powerups[powerupSelection], spawnPowPosition, Quaternion.identity);
             }
 
-            yield return new WaitForSeconds(Random.Range(5.0f, 7.0f));
+            yield return new WaitForSeconds(Random.Range(2.0f, 3.0f));
         }
     }
 
@@ -228,7 +228,7 @@ public class SpawnManager : MonoBehaviour
         { 
             Vector3 spawnPowPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             Instantiate(_specialShotPrefab, spawnPowPosition, Quaternion.identity);
-            yield return new WaitForSeconds(30.0f);
+            yield return new WaitForSeconds(15.0f);
         }
         
     }
