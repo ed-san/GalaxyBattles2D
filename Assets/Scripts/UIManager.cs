@@ -24,12 +24,20 @@ public class UIManager : MonoBehaviour
     private TMP_Text _gameOverText;
     [SerializeField] 
     private TMP_Text _restartText;
+    [SerializeField] 
+    private TMP_Text _restartBossText;
+    [SerializeField] 
+    private TMP_Text _quitToMainMenuText;
+    [SerializeField] 
+    private TMP_Text _wonTheLevelText;
+    
     private GameManager _gameManager;
     [SerializeField]
     private Player _player;
     private SpawnManager _spawnManager;
     [SerializeField] 
     private TextUIEffects _waveTextPulse;
+    private BossController _bossController;
 
     void Start()
     {
@@ -38,6 +46,10 @@ public class UIManager : MonoBehaviour
         _waveTextCounter.text = "Wave: " + 0;
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
+        _restartBossText.gameObject.SetActive(false);
+        _quitToMainMenuText.gameObject.SetActive(false);
+        _wonTheLevelText.gameObject.SetActive(false);
+        
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
 
@@ -92,10 +104,21 @@ public class UIManager : MonoBehaviour
 
     private void GameOverSequence()
     {
-        _gameOverText.gameObject.SetActive(true);
-        _restartText.gameObject.SetActive(true);
+        if (_spawnManager.IsBossSpawned == true)
+        {
+            _gameOverText.gameObject.SetActive(true);
+            _restartBossText.gameObject.SetActive(true);
+            _quitToMainMenuText.gameObject.SetActive(true);
+            _gameManager.GameOver();
+        }
+        else
+        {
+            _gameOverText.gameObject.SetActive(true);
+            _restartText.gameObject.SetActive(true);
+            _gameManager.GameOver();
+        }
+        
         StartCoroutine(GameOverFlickerRoutine());
-        _gameManager.GameOver();
     }
 
     IEnumerator GameOverFlickerRoutine()
@@ -108,5 +131,32 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(.5f);
         }
     }
+    
+    IEnumerator LevelCompleteFlickerRoutine()
+    {
+        while (true)
+        {
+            _wonTheLevelText.text = "Victory - Level 1 Complete!";
+            yield return new WaitForSeconds(.5f);
+            _wonTheLevelText.text = "";
+            yield return new WaitForSeconds(.5f);
+        }
+    }
+    
+    public void ResetGameOverUI()
+    {
+        _gameOverText.gameObject.SetActive(false);
+        _restartText.gameObject.SetActive(false);
+        _restartBossText.gameObject.SetActive(false);
+        _quitToMainMenuText.gameObject.SetActive(false);
+    }
+
+    public void DisplayLevelWon()
+    {
+        _wonTheLevelText.gameObject.SetActive(true);
+        _quitToMainMenuText.gameObject.SetActive(true);
+        StartCoroutine(LevelCompleteFlickerRoutine());
+    }
+
 
 }

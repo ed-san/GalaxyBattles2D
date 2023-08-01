@@ -778,6 +778,37 @@ public class Player : MonoBehaviour
        }
    }
 
+   public void ResetHealth()
+   {
+       _lives = 3;
+       _uiManager.UpdateLives(_lives);
+       _rightEngineVisualizer.SetActive(false);
+       _leftEngineVisualizer.SetActive(false);
+   }
    
+   public void SetThrusterEnergyBar(EnergyBarUI thrusterEnergyBarUI)
+   {
+       _thrusterEnergyBar = thrusterEnergyBarUI;
+   }
+
+   public void SetAmmoEnergyBarUI(EnergyBarUI ammoEnergyBarUI)
+   {
+       _ammoEnergyBarUI = ammoEnergyBarUI;
+   }
    
+   public void SetUIManager(UIManager uiManager)
+   {
+       _uiManager = uiManager;
+   }
+   
+   public int Lives
+   {
+       get { return _lives; }
+   }
+
+
+
+
+
+
 }

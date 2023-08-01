@@ -46,6 +46,8 @@ public class SpawnManager : MonoBehaviour
     private AudioSource _backgroundMusic;
 
     public int currentWave = 0;
+    [SerializeField]
+    private bool _bossSpawned = false;
     
 
 
@@ -198,7 +200,7 @@ public class SpawnManager : MonoBehaviour
             Vector3 spawnPowPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             int numberOfPowerups = _powerups.Length;
             int powerupSelection = Random.Range(0, numberOfPowerups);
-            GameObject player = GameObject.Find("Player");
+            GameObject player = GameObject.FindWithTag("Player");
             GameObject shield = player.transform.GetChild(0).gameObject;
 
             if (shield.activeSelf && powerupSelection == 2)
@@ -280,9 +282,8 @@ public class SpawnManager : MonoBehaviour
         get { return _wave; }
     }
     
-    public void SpawnBoss(int level)
+    public BossController SpawnBoss(int level)
     {
-        Debug.Log("SpawnBoss called. Level: " + level);
         // You'll need to define where and how the boss is spawned
         Vector3 spawnPosition = new Vector3(0.2f, 10.8f, 0.0f); // Spawns slightly off-screen top-center.
         // Adjust level to account for main menu scene
@@ -291,13 +292,15 @@ public class SpawnManager : MonoBehaviour
         // Check if the level is valid (i.e., we have a boss for this level)
         if (level < 0 || level >= _bossPrefabs.Length)
         {
-            Debug.LogError("Current level:" + level);
-            Debug.LogError("Invalid level!");
-            return;
+            //Debug.LogError("Current level:" + level);
+            //Debug.LogError("Invalid level!");
+            return null;
         }
     
         GameObject bossInstance = Instantiate(_bossPrefabs[level], spawnPosition, Quaternion.identity);
-
+        _bossSpawned = true;
+        
+        
         BossController bossController = bossInstance.GetComponent<BossController>();
         
         OnBossSpawned?.Invoke();
@@ -317,6 +320,9 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.LogError("BossController not found on the boss instance.");
         }
+        
+        // Return the new BossController
+        return bossController;
 
     }
     
@@ -334,11 +340,23 @@ public class SpawnManager : MonoBehaviour
         _backgroundMusic.Play();
     }
     
+    public void StopMusic()
+    {
+        _backgroundMusic.Stop();
+    }
+
+    
     IEnumerator DelayPowerupSpawning(float delay)
     {
         yield return new WaitForSeconds(delay);
         _stopPowerupSpawning = false;
         StartCoroutine(SpawnPowerupRoutine());
+    }
+    
+    public bool IsBossSpawned
+    {
+        get { return _bossSpawned; }
+        set { _bossSpawned = value; }
     }
     
 }

@@ -61,22 +61,14 @@ public class BossController : MonoBehaviour
     [SerializeField]
     private bool _hasEnteredRapidFire = false;
 
-
-    
-
-    
-    
     
     // Start is called before the first frame update
     void Start()
     {
         _anim = GetComponent<Animator>();
-        _player = GameObject.Find("Player").GetComponent<Player>();
+        _player = GameObject.FindWithTag("Player").GetComponent<Player>();
         _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
         _audioSource = GetComponents<AudioSource>();
-        //_bossHealthBarUI = GetComponentInChildren<Slider>();
-        //_bossHealthBarSlider = _bossHealthBarUI.GetComponentInChildren<Slider>();
-        //_bossHealthBar = new BossHealthBar(initialHealth, maxHealth);
 
 
         if (_anim == null)
@@ -105,12 +97,12 @@ public class BossController : MonoBehaviour
         transform.position = startPosition;
 
         // Start moving the boss.
-        StartCoroutine(MoveBoss(startPosition, endPosition, moveDuration));
+        StartMoving();
     }
     
-    void Update()
+    public void StartMoving()
     {
-       
+        StartCoroutine(MoveBoss(startPosition, endPosition, moveDuration));
     }
     
     void Awake()
@@ -420,6 +412,13 @@ public class BossController : MonoBehaviour
     {
         get { return _isDestroyed; }
     }
+    
+    public void RemoveBoss()
+    {
+        // This will remove the boss object from the scene immediately.
+        Destroy(this.gameObject);
+    }
+
 
 
 
