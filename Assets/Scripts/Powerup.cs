@@ -115,19 +115,23 @@ public class Powerup : MonoBehaviour
         
         if (other.CompareTag("Laser") && gameObject.layer == LayerMask.NameToLayer("Positive Powerup"))
         {
-            //This if-statement cleans up the Laser object
-            if (other != null)
+            // Check that the laser is from an enemy or boss
+            if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Debug.Log("Has Entered the Powerups Collision Block!");
-                Destroy(GetComponent<Collider2D>());
-                Destroy(other.gameObject);
+                //This if-statement cleans up the Laser object
+                if (other != null)
+                {
+                    Debug.Log("Has Entered the Powerups Collision Block!");
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(other.gameObject);
+                }
+
+                //This code destroys the powerup object after colliding with the laser.
+                _anim.SetTrigger("DestroyPowerup");
+                _powerUpSpeed = 0;
+                _audioSource[0].Play();
+                Destroy(this.gameObject, 2.2f);
             }
-            
-            //This code destroys the powerup object after colliding with the laser.
-            _anim.SetTrigger("DestroyPowerup");
-            _powerUpSpeed = 0;
-            _audioSource[0].Play();
-            Destroy(this.gameObject, 2.2f);
 
         }
         

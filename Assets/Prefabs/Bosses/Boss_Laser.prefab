@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9211740657715320042}
   - component: {fileID: 7042687466847349289}
   - component: {fileID: 4611323143449375910}
-  m_Layer: 12
+  m_Layer: 7
   m_Name: Boss_Laser
   m_TagString: BossLaser
   m_Icon: {fileID: 0}
