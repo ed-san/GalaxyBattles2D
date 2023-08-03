@@ -17,18 +17,18 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerups;
     [SerializeField]
-    private float _spawnRate = 20.0f;
+    private float _spawnRate = 5.0f;
     private bool _stopSpawning = false;
     private bool _stopPowerupSpawning = false;
     [SerializeField] 
-    private float _specialShotSpawnRate = 7.0f;
+    private float _specialShotSpawnRate = 6.0f;
     [SerializeField] 
-    private float _aoeEnemySpawnRate = 10.0f;
+    private float _aoeEnemySpawnRate = 20.0f;
     [SerializeField] 
     private GameObject _specialShotPrefab;
     private float _waveDuration = 3.0f;
     private int _wave = 1;
-    private float _maxSpawnRate = .50f;
+    private float _maxSpawnRate = 1.0f;
     private float _spawnDecreaseRate = 0.05f;
     private UIManager _uiManager;
     [SerializeField]
@@ -75,7 +75,7 @@ public class SpawnManager : MonoBehaviour
 
     public void StartSpawning()
     {
-        StartCoroutine(DodgeEnemySpawnRoutine(10.0f));
+        StartCoroutine(DodgeEnemySpawnRoutine(20.0f));
         StartCoroutine(AoeEnemySpawnRoutine(_aoeEnemySpawnRate));
         StartCoroutine(WaveManagement(_wave, _waveDuration));
         StartCoroutine(SpawnPowerupRoutine());
@@ -92,10 +92,8 @@ public class SpawnManager : MonoBehaviour
         float updatedSpawnRate = SpawnRateAssignment();
         _spawnRate = updatedSpawnRate;
         Enemy.MovementType  movementType = MovementTypeAssignment(_wave);
-        StartCoroutine(SpawnEnemyRoutine(_spawnRate, _waveDuration, movementType));
         
-
-        yield return new WaitForSeconds(_waveDuration);
+        yield return StartCoroutine(SpawnEnemyRoutine(_spawnRate, _waveDuration, movementType));
 
         _waveDuration = WaveDurationAssignment(_waveDuration);
         _wave++;
@@ -151,7 +149,7 @@ public class SpawnManager : MonoBehaviour
     private float WaveDurationAssignment(float waveDuration)
     {
         const float increment = 1.0f;
-        const float maxWaveDuration = 3.0f;
+        const float maxWaveDuration = 10.0f;
 
         float newWaveDuration = waveDuration + increment;
         if (newWaveDuration > maxWaveDuration)
@@ -171,8 +169,9 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnEnemyRoutine(float spawnRate, float waveDuration, Enemy.MovementType movementType)
     {
         float timeSpentSpawning = 0.0f;
+        int enemiesSpawned = 0; // Track the number of enemies spawned
 
-        while (timeSpentSpawning < waveDuration)
+        while (timeSpentSpawning < waveDuration && enemiesSpawned < 2) // Change '2' to your desired number of enemies per wave
         {
             Vector3 spawnPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             GameObject newEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
@@ -184,10 +183,13 @@ public class SpawnManager : MonoBehaviour
             {
                 enemyScript.SetMovementType(movementType);
             }
-
+            
+            enemiesSpawned++;
+            timeSpentSpawning += _spawnRate;
+            
             // Wait for the specified spawn rate
             yield return new WaitForSeconds(_spawnRate);
-            timeSpentSpawning += _spawnRate;
+        
         }
     }
 
@@ -230,7 +232,10 @@ public class SpawnManager : MonoBehaviour
         { 
             Vector3 spawnPowPosition = new Vector3(Random.Range(-10.14f, 10.14f), 12.0f, 0);
             Instantiate(_specialShotPrefab, spawnPowPosition, Quaternion.identity);
-            yield return new WaitForSeconds(15.0f);
+            
+            // If a boss is spawned, use a shorter delay.
+            float delay = IsBossSpawned ? 6.0f : 15.0f;
+            yield return new WaitForSeconds(delay);
         }
         
     }

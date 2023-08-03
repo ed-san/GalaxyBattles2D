@@ -24,9 +24,9 @@ public class BossController : MonoBehaviour
     public static event BossDestroyedAction OnBossDestroyed;
     private BossHealthBarUI _bossHealthBarUI;
     [SerializeField]
-    private int initialHealth = 100;
+    private int initialHealth = 80;
     [SerializeField]
-    private int maxHealth = 100;
+    private int maxHealth = 80;
     private BossHealthBar _bossHealthBar;
     
     /* Variables Regarding Boss Lasers */

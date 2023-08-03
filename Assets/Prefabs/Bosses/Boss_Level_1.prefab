@@ -367,8 +367,8 @@ MonoBehaviour:
   moveDuration: 7
   _audioSource: []
   _cameraShakeStrength: 5
-  initialHealth: 100
-  maxHealth: 100
+  initialHealth: 80
+  maxHealth: 80
   _laserPrefab: {fileID: 249049102865344551, guid: 9741f442e2c442b448a6a95675ac3467, type: 3}
   _waveSize: 5
   _waveAngle: 140

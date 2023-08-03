@@ -34,7 +34,7 @@ public class Powerup : MonoBehaviour
         }
         else
         {
-            if (_powerupID < 6) // Update this line
+            if (_powerupID < 6)
             {
                 _anim.SetTrigger("Play" + _powerupNames[_powerupID] + "Powerup");
             }
@@ -113,12 +113,13 @@ public class Powerup : MonoBehaviour
             Destroy(this.gameObject);
         }
         
+        
         if (other.CompareTag("Laser") && gameObject.layer == LayerMask.NameToLayer("Positive Powerup"))
         {
             // Check that the laser is from an enemy or boss
             if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                //This if-statement cleans up the Laser object
+                // This if-statement cleans up the Laser object
                 if (other != null)
                 {
                     Debug.Log("Has Entered the Powerups Collision Block!");
@@ -126,11 +127,21 @@ public class Powerup : MonoBehaviour
                     Destroy(other.gameObject);
                 }
 
-                //This code destroys the powerup object after colliding with the laser.
-                _anim.SetTrigger("DestroyPowerup");
                 _powerUpSpeed = 0;
-                _audioSource[0].Play();
-                Destroy(this.gameObject, 2.2f);
+                
+                if (_powerupID == 8) // Special Shot Powerup Destroyed
+                {
+                    // Immediately destroy the GameObject for the Special Shot
+                    Destroy(this.gameObject);
+                    _audioSource[0].Play();
+                }
+                else
+                {
+                    // For other powerups, wait for 2.2 seconds before destroying
+                    _audioSource[0].Play();
+                    _anim.SetTrigger("DestroyPowerup");
+                    Destroy(this.gameObject, 2.2f);
+                }
             }
 
         }

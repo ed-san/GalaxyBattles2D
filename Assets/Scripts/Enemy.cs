@@ -398,7 +398,7 @@ public class Enemy : MonoBehaviour
 
             if (gameObject.CompareTag("AoeEnemy"))
                 {
-                    //Destroy(other.gameObject);
+                    
                     _isDestroyed = true;
 
                     _anim.SetTrigger("OnAoeEnemyDeath");
@@ -488,6 +488,7 @@ public class Enemy : MonoBehaviour
 
                 if (gameObject.CompareTag("AoeEnemy"))
                 {
+                    _isDestroyed = true;
                     _anim.SetTrigger("OnAoeEnemyDeath");
                     _enemySpeed = 0;
                     _audioSource[0].Play();
@@ -498,7 +499,19 @@ public class Enemy : MonoBehaviour
 
                 if (gameObject.CompareTag("Enemy"))
                 {
+                    _isDestroyed = true;
                     _anim.SetTrigger("OnEnemyDeath");
+                    _enemySpeed = 0;
+                    _audioSource[0].Play();
+
+                    Destroy(GetComponent<Collider2D>());
+                    Destroy(this.gameObject, 2.2f);
+                }
+                
+                if (gameObject.CompareTag("DodgeEnemy"))
+                {
+                    _isDestroyed = true;
+                    _anim.Play("Dodge_Enemy_Destroyed_anim");
                     _enemySpeed = 0;
                     _audioSource[0].Play();
 

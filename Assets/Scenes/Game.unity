@@ -2891,9 +2891,9 @@ MonoBehaviour:
   - {fileID: 7343755663905098544, guid: 96cd92574180c91438eeda0970152152, type: 3}
   - {fileID: 5486634655708575127, guid: 6394e9d0cc2121f4192ce16365f2125e, type: 3}
   - {fileID: 116386065367581714, guid: b1bcfde8c8ef018408e9ad46f047feef, type: 3}
-  _spawnRate: 20
+  _spawnRate: 5
   _specialShotSpawnRate: 7
-  _aoeEnemySpawnRate: 10
+  _aoeEnemySpawnRate: 20
   _specialShotPrefab: {fileID: 4989294637185965692, guid: 8b86f5bdd2b0fca4dbc2fdf97ba3267e, type: 3}
   _bossPrefabs:
   - {fileID: 908502152818896444, guid: e63754dbb9cc41240953e12cfd5f5d55, type: 3}
